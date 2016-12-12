@@ -1,5 +1,3 @@
-package bgu.spl.a2;
-
 /**
  * this class represents a deferred result i.e., an object that eventually will
  * be resolved to hold a result of some operation, the class allows for getting
@@ -15,27 +13,25 @@ package bgu.spl.a2;
  * @param <T> the result type
  */
 public class Deferred<T> {
-
+    T result;
+    Runnable endCallback = null;
+    boolean isresolved;
     /**
      *
      * @return the resolved value if such exists (i.e., if this object has been
-     * {@link #resolve(java.lang.Object)}ed yet
+     * {@link #resolve(Object)}ed yet
      * @throws IllegalStateException in the case where this method is called and
      * this object is not yet resolved
      */
-    public T get() {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
-    }
+    public T get() {return result;}
 
     /**
      *
      * @return true if this object has been resolved - i.e., if the method
-     * {@link #resolve(java.lang.Object)} has been called on this object before.
+     * {@link #resolve(Object)} has been called on this object before.
      */
     public boolean isResolved() {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        return isresolved;
     }
 
     /**
@@ -43,7 +39,7 @@ public class Deferred<T> {
      * {@link #get()} should return the given value
      *
      * Any callbacks that were registered to be notified when this object is
-     * resolved via the {@link #whenResolved(java.lang.Runnable)} method should
+     * resolved via the {@link #whenResolved(Runnable)} method should
      * be executed before this method returns
      *
      * @param value - the value to resolve this deferred object with
@@ -51,8 +47,11 @@ public class Deferred<T> {
      * resolved
      */
     public void resolve(T value) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        result = value;
+        isresolved=true;
+        if(endCallback!=null){
+            endCallback.run();
+        }
     }
 
     /**
@@ -69,8 +68,12 @@ public class Deferred<T> {
      * resolved
      */
     public void whenResolved(Runnable callback) {
-        //TODO: replace method body with real implementation
-        throw new UnsupportedOperationException("Not Implemented Yet.");
+        if(isResolved()){
+            callback.run();
+        }
+        else{
+            endCallback = callback;
+        }
     }
 
 }
