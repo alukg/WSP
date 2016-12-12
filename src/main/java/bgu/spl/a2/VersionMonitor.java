@@ -1,3 +1,5 @@
+package bgu.spl.a2;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * methods
  */
 public class VersionMonitor {
-    AtomicInteger version;
+    private AtomicInteger version;
 
     VersionMonitor(){
         version = new AtomicInteger(0);

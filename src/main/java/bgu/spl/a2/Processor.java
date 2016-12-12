@@ -1,3 +1,7 @@
+package bgu.spl.a2;
+
+import java.util.ArrayDeque;
+
 /**
  * this class represents a single work stealing processor, it is
  * {@link Runnable} so it is suitable to be executed by threads.
@@ -10,7 +14,6 @@
  */
 public class Processor implements Runnable {
 
-    private boolean isStopped;
     private final WorkStealingThreadPool pool;
     private final int id;
     private final ArrayDeque<Task> tasks;
@@ -34,7 +37,7 @@ public class Processor implements Runnable {
     /*package*/ Processor(int id, WorkStealingThreadPool pool) {
         this.id = id;
         this.pool = pool;
-        this.tasks = new ArrayDeque<Task>();
+        this.tasks = new ArrayDeque<>();
     }
 
     @Override

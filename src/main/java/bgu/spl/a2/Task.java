@@ -1,9 +1,7 @@
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicInteger;
+package bgu.spl.a2;
 
-import static java.lang.System.in;
-import static java.util.Objects.isNull;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * an abstract class that represents a task that may be executed using the

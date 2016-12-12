@@ -1,3 +1,5 @@
+package bgu.spl.a2;
+
 /**
  * represents a work stealing thread pool - to understand what this class does
  * please refer to your assignment.

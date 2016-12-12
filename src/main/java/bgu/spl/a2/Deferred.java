@@ -1,3 +1,5 @@
+package bgu.spl.a2;
+
 /**
  * this class represents a deferred result i.e., an object that eventually will
  * be resolved to hold a result of some operation, the class allows for getting
@@ -13,9 +15,9 @@
  * @param <T> the result type
  */
 public class Deferred<T> {
-    T result;
-    Runnable endCallback = null;
-    boolean isresolved;
+    private T result;
+    private Runnable endCallback = null;
+    private boolean isresolved;
     /**
      *
      * @return the resolved value if such exists (i.e., if this object has been
