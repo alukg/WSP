@@ -1,5 +1,6 @@
 package bgu.spl.a2;
 
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -21,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class VersionMonitor {
     private AtomicInteger version;
 
-    VersionMonitor(){
+    public VersionMonitor(){
         version = new AtomicInteger(0);
     }
 
@@ -42,8 +43,10 @@ public class VersionMonitor {
 
     public void await(int version) throws InterruptedException {
         synchronized(this){
-            while(getVersion()==version)
+            while(getVersion()==version){
+                System.out.println("Thread " + Thread.currentThread().getName() + "Waiting.");
                 wait();
+            }
         }
     }
 }

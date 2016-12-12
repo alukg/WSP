@@ -66,8 +66,7 @@ public abstract class Task<R> {
             t.father = this;
             currProc.addTask(t);
             childsLocks.set(childsLocks.get() + 1);
-            int temp = currProc.getPool().getVersionMonitor().version.get();
-            currProc.getPool().getVersionMonitor().version.set(temp+1);
+            currProc.getPool().getVersionMonitor().inc();
         }
     }
 
@@ -93,7 +92,6 @@ public abstract class Task<R> {
                     currProc.addTask(father);
             });
         }
-        //throw new UnsupportedOperationException("Not Implemented Yet.");
     }
 
     /**
