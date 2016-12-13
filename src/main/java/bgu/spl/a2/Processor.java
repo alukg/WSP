@@ -66,17 +66,15 @@ public class Processor implements Runnable {
                     for (int i = 0; i < currProc.tasks.size() / 2; i++) {
                         this.addTask(currProc.tasks.pollLast());
                     }
-                    System.out.println("Thread"+ this.id +" steal task" );
+                    System.out.println("Thread" + this.id + " steal task");
                     break;
-                }
-                else{
+                } else {
                     counter++;
                 }
             }
         } while (currVersion < pool.getVersionMonitor().getVersion());
-        if(this.tasks.size() == 0)
-            System.out.println("Thread"+ this.id +" enter sleeping" );
-        pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
+        if (this.tasks.size() == 0)
+            pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
     }
 
     /**
@@ -88,7 +86,7 @@ public class Processor implements Runnable {
         tasks.addFirst(task);
     }
 
-    WorkStealingThreadPool getPool(){
+    WorkStealingThreadPool getPool() {
         return pool;
     }
 }

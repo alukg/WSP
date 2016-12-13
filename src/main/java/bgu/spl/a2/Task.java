@@ -15,14 +15,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @param <R> the task result type
  */
 public abstract class Task<R> {
+    private Task thisTask = this;
     private Deferred deferred = new Deferred<R>();
     private boolean is_started = false;
     private Runnable end_callback;
     private Processor currProc;
     private AtomicInteger childsLocks = new AtomicInteger(0);
-    private Task father;
-
-
 
     /**
      * start handling the task - note that this method is protected, a handler
@@ -51,8 +49,8 @@ public abstract class Task<R> {
             is_started = true;
             currProc = handler;
             start();
-        }
-        end_callback.run();
+        } else
+            end_callback.run();
     }
 
     /**
@@ -63,7 +61,6 @@ public abstract class Task<R> {
      */
     protected final void spawn(Task<?>... task) {
         for (Task t : task) {
-            t.father = this;
             currProc.addTask(t);
             childsLocks.set(childsLocks.get() + 1);
             currProc.getPool().getVersionMonitor().inc();
@@ -82,16 +79,38 @@ public abstract class Task<R> {
      */
     protected final void whenResolved(Collection<? extends Task<?>> tasks, Runnable callback) {
         end_callback = callback;
-        for (Task task : tasks) {
-            task.deferred.whenResolved(() -> {
+//        for (Task task : tasks) {
+//            task.deferred.whenResolved(() -> {
+//                int oldV;
+//                do {
+//                    oldV = father.childsLocks.get();
+//                } while (!father.childsLocks.compareAndSet(oldV, father.childsLocks.get() - 1));
+//                if (father.childsLocks.get() == 0)
+//                    currProc.addTask(father);
+//            });
+//        }
+
+        class OneShotTask implements Runnable {
+            private Task fatherTask;
+
+            private OneShotTask(Task task) {
+                fatherTask = task;
+            }
+
+            public void run() {
                 int oldV;
                 do {
-                    oldV = father.childsLocks.get();
-                } while (!father.childsLocks.compareAndSet(oldV, father.childsLocks.get() - 1));
-                if (father.childsLocks.get() == 0)
-                    currProc.addTask(father);
-            });
+                    oldV = fatherTask.childsLocks.get();
+                } while (!fatherTask.childsLocks.compareAndSet(oldV, fatherTask.childsLocks.get() - 1));
+                if (fatherTask.childsLocks.get() == 0)
+                    currProc.addTask(fatherTask);
+            }
         }
+
+        for (Task task : tasks) {
+            task.deferred.whenResolved(new OneShotTask(thisTask));
+        }
+
     }
 
     /**

@@ -25,17 +25,29 @@ public class TestDeferred {
 
     @Test
     public void isResolved() {
-
+        assertEquals(false,deferred.isResolved());
+        deferred.resolve(5);
+        assertEquals(true, deferred.isResolved());
     }
 
     @Test
     public void resolve() {
-
+        assertEquals(false,deferred.isResolved());
+        Runnable test = ()->{deferred.resolve(6);};
+        deferred.whenResolved(test);
+        deferred.resolve(5);
+        assertEquals(6, deferred.get());
+        assertEquals(true, deferred.isResolved());
     }
 
     @Test
     public void whenResolved() {
-
+        assertEquals(false,deferred.isResolved());
+        deferred.resolve(5);
+        assertEquals(true, deferred.isResolved());
+        Runnable test = ()->{deferred.resolve(6);};
+        deferred.whenResolved(test);
+        assertEquals(6, deferred.get());
     }
 
 }

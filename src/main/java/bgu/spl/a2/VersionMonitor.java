@@ -28,10 +28,10 @@ public class VersionMonitor {
 
     public int getVersion() {
         return version.get();
-        //throw new UnsupportedOperationException("Not Implemented Yet.");
     }
 
     synchronized public void inc() {
+        System.out.println("inc by thread " + Thread.currentThread().getName());
         int oldV;
         do {
             oldV = version.get();
@@ -44,7 +44,7 @@ public class VersionMonitor {
     public void await(int version) throws InterruptedException {
         synchronized(this){
             while(getVersion()==version){
-                System.out.println("Thread " + Thread.currentThread().getName() + "Waiting.");
+                System.out.println(Thread.currentThread().getName() + " Waiting.");
                 wait();
             }
         }
