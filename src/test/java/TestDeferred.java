@@ -1,4 +1,5 @@
 import bgu.spl.a2.Deferred;
+import bgu.spl.a2.Task;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -32,12 +33,28 @@ public class TestDeferred {
 
     @Test
     public void resolve() {
+        Deferred testedDef = new Deferred<Integer>();
+
+        assertEquals(false,testedDef.isResolved());
         assertEquals(false,deferred.isResolved());
-        Runnable test = ()->{deferred.resolve(6);};
-        deferred.whenResolved(test);
         deferred.resolve(5);
-        assertEquals(6, deferred.get());
-        assertEquals(true, deferred.isResolved());
+        assertEquals(true,deferred.isResolved());
+
+        class OneShotTask implements Runnable {
+            private Deferred def;
+
+            private OneShotTask(Deferred newDef) {
+                def = newDef;
+            }
+
+            public void run() {
+                def.resolve(6);
+            }
+        }
+
+        deferred.whenResolved(new OneShotTask(testedDef));
+        assertEquals(6, testedDef.get());
+        assertEquals(true, testedDef.isResolved());
     }
 
     @Test
