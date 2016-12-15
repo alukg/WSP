@@ -9,10 +9,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * {@link #getVersion()} once you have a version number, you can call
  * {@link #await(int)} with this version number in order to wait until this
  * version number changes.
- *
+ * <p>
  * you can also increment the version number by one using the {@link #inc()}
  * method.
- *
+ * <p>
  * Note for implementors: you may add methods and synchronize any of the
  * existing methods in this class *BUT* you must be able to explain why the
  * synchronization is needed. In addition, the methods you add can only be
@@ -20,33 +20,27 @@ import java.util.concurrent.atomic.AtomicInteger;
  * methods
  */
 public class VersionMonitor {
-    private AtomicInteger version;
+    private int version;
 
-    public VersionMonitor(){
-        version = new AtomicInteger(0);
+    public VersionMonitor() {
+        version = 0;
     }
 
     public int getVersion() {
-        return version.get();
+        return version;
     }
 
-    synchronized public void inc() {
-        System.out.println("inc by thread " + Thread.currentThread().getName());
-        int oldV;
-        do {
-            oldV = version.get();
-        }while(!version.compareAndSet(oldV,oldV+1));
+    synchronized public void inc(Processor proc) { //remove Processor after debug
+        System.out.println("inc by thread " + proc.getId());
+        version++;
         System.out.println("wake allThreads");
         this.notifyAll();
-
     }
 
-    public void await(int version) throws InterruptedException {
-        synchronized(this){
-            while(getVersion()==version){
-                System.out.println(Thread.currentThread().getName() + " Waiting.");
-                wait();
-            }
+    synchronized public void await(int version) throws InterruptedException {
+        while (getVersion() == version) {
+            System.out.println(Thread.currentThread().getName() + " Waiting.");
+            wait();
         }
     }
 }

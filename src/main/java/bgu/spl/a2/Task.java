@@ -63,7 +63,7 @@ public abstract class Task<R> {
         for (Task t : task) {
             currProc.addTask(t);
             childsLocks.set(childsLocks.get() + 1);
-            currProc.getPool().getVersionMonitor().inc();
+            currProc.getPool().getVersionMonitor().inc(currProc); //remove carProc after debug
         }
     }
 
