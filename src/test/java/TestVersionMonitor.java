@@ -57,7 +57,7 @@ public class TestVersionMonitor {
         } catch (InterruptedException e) {
 
         }
-        assertEquals(300, vs.getVersion());
+        assertEquals(30000, vs.getVersion());
     }
 
     /**
