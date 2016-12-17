@@ -30,8 +30,7 @@ public class VersionMonitor {
         return version;
     }
 
-    synchronized public void inc(Processor proc) { //remove Processor after debug
-        System.out.println("inc by thread " + proc.getId());
+    synchronized public void inc() { //remove Processor after debug
         version++;
         System.out.println("wake allThreads");
         this.notifyAll();

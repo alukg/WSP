@@ -60,27 +60,20 @@ public class TestVersionMonitor {
     public void await() {
         thread0 = new Thread(() -> {
             try {
-                thread1.sleep(3000);
-            } catch (InterruptedException e) {
-            }
-            vs.inc();
-        });
-        thread1 = new Thread(() -> {
-            try {
                 vs.await(0);
             } catch (InterruptedException e) {
             }
+            assertEquals(1, vs.getVersion());
+        });
+        thread1 = new Thread(() -> {
             vs.inc();
         });
         thread0.start();
-        thread1.start();
         try {
-            thread0.join();
-            thread1.join();
-        } catch (InterruptedException e) {
-
+            Thread.currentThread().sleep(5000);
         }
-        assertEquals(2, vs.getVersion());
-    }
+        catch (InterruptedException e){}
+        thread1.start();
 
+    }
 }

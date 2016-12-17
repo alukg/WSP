@@ -47,7 +47,7 @@ public class WorkStealingThreadPool {
         this.task = task;
         System.out.println("Submit first task to thread.");
         processors[0].addTask(task);
-        vm.inc(processors[0]); //remove processors[0] after debug
+        vm.inc(); //remove processors[0] after debug
     }
 
     /**
