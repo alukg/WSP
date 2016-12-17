@@ -19,9 +19,7 @@ package bgu.spl.a2;
 public class VersionMonitor {
     private int version;
 
-    public VersionMonitor() {
-        version = 0;
-    }
+    public VersionMonitor() { version = 0; }
 
     public int getVersion() {
         return version;

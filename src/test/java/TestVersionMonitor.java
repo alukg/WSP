@@ -10,6 +10,9 @@ public class TestVersionMonitor {
     private Thread thread2;
     private Thread thread3;
 
+    /**
+     * Setup objects to work with for the tests.
+     */
     @Before
     public void setUp() {
         vs = new VersionMonitor();
@@ -19,23 +22,29 @@ public class TestVersionMonitor {
         thread3 = null;
     }
 
+    /**
+     * Checks that the function returns the right value.
+     */
     @Test
     public void getVersion() {
         assertEquals(0, vs.getVersion());
     }
 
+    /**
+     * Checks that the function increase in synchronize without mistakes.
+     */
     @Test
     public void inc() {
         thread1 = new Thread(() -> {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10000; i++)
                 vs.inc();
         });
         thread2 = new Thread(() -> {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10000; i++)
                 vs.inc();
         });
         thread3 = new Thread(() -> {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10000; i++)
                 vs.inc();
         });
         thread1.start();
@@ -51,6 +60,9 @@ public class TestVersionMonitor {
         assertEquals(300, vs.getVersion());
     }
 
+    /**
+     * Checks that the thread actually wait until other thread insert into the inc function.
+     */
     @Test
     public void await() {
         thread0 = new Thread(() -> {
