@@ -19,11 +19,6 @@ public class TestVersionMonitor {
         thread3 = null;
     }
 
-    @After
-    public void tearDown() {
-
-    }
-
     @Test
     public void getVersion() {
         assertEquals(0, vs.getVersion());
@@ -65,15 +60,12 @@ public class TestVersionMonitor {
             }
             assertEquals(1, vs.getVersion());
         });
-        thread1 = new Thread(() -> {
-            vs.inc();
-        });
+        thread1 = new Thread(() -> vs.inc());
         thread0.start();
         try {
-            Thread.currentThread().sleep(5000);
+            Thread.currentThread().sleep(2000);
+        } catch (InterruptedException e) {
         }
-        catch (InterruptedException e){}
         thread1.start();
-
     }
 }
