@@ -79,5 +79,9 @@ public class TestVersionMonitor {
         } catch (InterruptedException e) {
         }
         thread1.start();
+        try {
+            thread0.join();
+        } catch (InterruptedException e) {
+        }
     }
 }
