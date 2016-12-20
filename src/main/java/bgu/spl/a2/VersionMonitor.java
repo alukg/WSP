@@ -1,8 +1,5 @@
 package bgu.spl.a2;
 
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Describes a monitor that supports the concept of versioning - its idea is
  * simple, the monitor has a version number which you can receive via the method
@@ -22,15 +19,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class VersionMonitor {
     private int version;
 
-    public VersionMonitor() {
-        version = 0;
-    }
+    public VersionMonitor() { version = 0; }
 
     public int getVersion() {
         return version;
     }
 
-    synchronized public void inc() { //remove Processor after debug
+    synchronized public void inc() {
         version++;
 //        System.out.println(Thread.currentThread().getName() + " wake allThreads");
         notifyAll();
