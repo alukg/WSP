@@ -45,7 +45,7 @@ public class MergeSort extends Task<int[]> {
             int[] left = tasks.get(0).getResult().get();
             int[] right = tasks.get(1).getResult().get();
 
-            int[] newArray = new int[left.length+right.length];
+            int[] newArray = new int[left.length + right.length];
 
             int i = 0, j = 0, k = 0;
 
@@ -75,13 +75,12 @@ public class MergeSort extends Task<int[]> {
 
     public static void main(String[] args) throws InterruptedException {
         WorkStealingThreadPool pool = new WorkStealingThreadPool(4);
-        int n = 100000; //you may check on different number of elements if you like
+        int n = 1000000; //you may check on different number of elements if you like
 //        int[] array = new Random().ints(n).toArray();
-        int[] array = new int [n];
+        int[] array = new int[n];
         Random randNum = new Random();
-        for (int i = 0; i < array.length; i++)
-        {
-            array[i] = randNum.nextInt(10000000);
+        for (int i = 0; i < array.length; i++) {
+            array[i] = randNum.nextInt(1000000);
         }
 
         MergeSort task = new MergeSort(array);
@@ -92,6 +91,17 @@ public class MergeSort extends Task<int[]> {
         task.getResult().whenResolved(() -> {
             //warning - a large print!! - you can remove this line if you wish
             System.out.println(Arrays.toString(task.getResult().get()));
+            /******* debug ***********/
+            boolean ans = true;
+            int length = task.getResult().get().length;
+            for (int i = 1; i < length; i++) {
+                if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
+                    ans = false;
+                    break;
+                }
+            }
+            System.out.println(ans);
+            /*************************/
             l.countDown();
         });
 

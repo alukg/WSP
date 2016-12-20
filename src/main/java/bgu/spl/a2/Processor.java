@@ -69,8 +69,7 @@ public class Processor implements Runnable {
                         for (int i = 0; i < numOfTasksToSteal && currProc.tasks.size() > 1; i++) {
                             this.addTask(currProc.tasks.pollLast());
                         }
-                        System.out.println("Thread" + this.id + " steal task from Thread" + currProc.id + "\n" +
-                        "Thread" + this.id + " stole " + tasks.size() + " tasks" + "\n" +
+                        System.out.println("Thread" + this.id + " stole " + tasks.size() + " tasks from Thread" + currProc.id + "\n" +
                         "Thread" + currProc.id + " have " + currProc.tasks.size() + " tasks left");
                         break;
                     } else {
