@@ -89,6 +89,7 @@ public class Processor implements Runnable {
      */
     void addTask(Task<?> task) {
         tasks.addFirst(task);
+        getPool().getVersionMonitor().inc();
     }
 
     public int getId(){ //remove after debug
@@ -98,4 +99,5 @@ public class Processor implements Runnable {
     WorkStealingThreadPool getPool() {
         return pool;
     }
+
 }

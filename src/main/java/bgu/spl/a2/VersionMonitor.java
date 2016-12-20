@@ -32,8 +32,8 @@ public class VersionMonitor {
 
     synchronized public void inc() { //remove Processor after debug
         version++;
-        System.out.println("wake allThreads");
-        this.notifyAll();
+//        System.out.println(Thread.currentThread().getName() + " wake allThreads");
+        notifyAll();
     }
 
     synchronized public void await(int version) throws InterruptedException {
