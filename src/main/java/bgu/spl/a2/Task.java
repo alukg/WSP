@@ -18,6 +18,7 @@ public abstract class Task<R> {
     private Task thisTask = this;
     private Deferred deferred = new Deferred<R>();
     private boolean is_started = false;
+    private boolean returned = false;
     private Runnable end_callback;
     private Processor currProc;
     private AtomicInteger childsLocks = new AtomicInteger(0);
@@ -60,11 +61,12 @@ public abstract class Task<R> {
      * @param task the task to execute
      */
     protected final void spawn(Task<?>... task) {
+        int oldV;
         for (Task t : task) {
             currProc.addTask(t);
-            childsLocks.set(childsLocks.get() + 1);
-
-
+            do {
+                oldV = childsLocks.get();
+            } while (!childsLocks.compareAndSet(oldV, childsLocks.get() + 1));
         }
     }
 
@@ -80,16 +82,6 @@ public abstract class Task<R> {
      */
     protected final void whenResolved(Collection<? extends Task<?>> tasks, Runnable callback) {
         end_callback = callback;
-//        for (Task task : tasks) {
-//            task.deferred.whenResolved(() -> {
-//                int oldV;
-//                do {
-//                    oldV = father.childsLocks.get();
-//                } while (!father.childsLocks.compareAndSet(oldV, father.childsLocks.get() - 1));
-//                if (father.childsLocks.get() == 0)
-//                    currProc.addTask(father);
-//            });
-//        }
 
         class OneShotTask implements Runnable {
             private Task fatherTask;
@@ -103,8 +95,12 @@ public abstract class Task<R> {
                 do {
                     oldV = fatherTask.childsLocks.get();
                 } while (!fatherTask.childsLocks.compareAndSet(oldV, fatherTask.childsLocks.get() - 1));
-                if (fatherTask.childsLocks.get() == 0)
-                    currProc.addTask(fatherTask);
+                synchronized(fatherTask){
+                    if (fatherTask.childsLocks.get() == 0 && !fatherTask.returned) {
+                        currProc.addTask(fatherTask);
+                        returned = true;
+                    }
+                }
             }
         }
 

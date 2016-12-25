@@ -21,10 +21,11 @@ public class MergeSort extends Task<int[]> {
 
     @Override
     protected void start() {
-        List<MergeSort> tasks = new ArrayList<>();
         if (array.length == 1) {
             complete(array);
         } else {
+            List<MergeSort> tasks = new ArrayList<>();
+
             int[] array1 = new int[(array.length + 1) / 2];
             int[] array2 = new int[array.length / 2];
             for (int i = 0; i < array.length; i++)
@@ -39,74 +40,72 @@ public class MergeSort extends Task<int[]> {
             MergeSort newTask2 = new MergeSort(array2);
             spawn(newTask2);
             tasks.add(newTask2);
-        }
-        whenResolved(tasks, () -> {
 
-            int[] left = tasks.get(0).getResult().get();
-            int[] right = tasks.get(1).getResult().get();
+            whenResolved(tasks, () -> {
+                int[] left = tasks.get(0).getResult().get();
+                int[] right = tasks.get(1).getResult().get();
 
-            int[] newArray = new int[left.length + right.length];
+                int[] newArray = new int[left.length + right.length];
 
-            int i = 0, j = 0, k = 0;
+                int i = 0, j = 0, k = 0;
 
-            while (i < left.length && j < right.length) {
-                if (left[i] < right[j]) {
+                while (i < left.length && j < right.length) {
+                    if (left[i] < right[j]) {
+                        newArray[k] = left[i];
+                        i++;
+                    } else {
+                        newArray[k] = right[j];
+                        j++;
+                    }
+                    k++;
+                }
+                while (i < left.length) {
                     newArray[k] = left[i];
                     i++;
-                } else {
+                    k++;
+                }
+                while (j < right.length) {
                     newArray[k] = right[j];
                     j++;
+                    k++;
                 }
-                k++;
-            }
-            while (i < left.length) {
-                newArray[k] = left[i];
-                i++;
-                k++;
-            }
-            while (j < right.length) {
-                newArray[k] = right[j];
-                j++;
-                k++;
-            }
-            complete(newArray);
-        });
+                complete(newArray);
+            });
+        }
     }
 
     public static void main(String[] args) throws InterruptedException {
-        WorkStealingThreadPool pool = new WorkStealingThreadPool(4);
-        int n = 1000000; //you may check on different number of elements if you like
-//        int[] array = new Random().ints(n).toArray();
-        int[] array = new int[n];
-        Random randNum = new Random();
-        for (int i = 0; i < array.length; i++) {
-            array[i] = randNum.nextInt(1000000);
-        }
+        for (int j = 0; j <= 1000; j++) {
+            WorkStealingThreadPool pool = new WorkStealingThreadPool(4);
+            int n = 100000; //you may check on different number of elements if you like
+            int[] array = new Random().ints(n).toArray();
 
-        MergeSort task = new MergeSort(array);
+            MergeSort task = new MergeSort(array);
 
-        CountDownLatch l = new CountDownLatch(1);
-        pool.start();
-        pool.submit(task);
-        task.getResult().whenResolved(() -> {
-            //warning - a large print!! - you can remove this line if you wish
-            System.out.println(Arrays.toString(task.getResult().get()));
-            /******* debug ***********/
-            boolean ans = true;
-            int length = task.getResult().get().length;
-            for (int i = 1; i < length; i++) {
-                if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
-                    ans = false;
-                    break;
+            CountDownLatch l = new CountDownLatch(1);
+            pool.start();
+            pool.submit(task);
+            task.getResult().whenResolved(() -> {
+                //warning - a large print!! - you can remove this line if you wish
+                //System.out.println(Arrays.toString(task.getResult().get()));
+                /******* debug ***********/
+                boolean ans = true;
+                int length = task.getResult().get().length;
+                for (int i = 1; i < length; i++) {
+                    if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
+                        ans = false;
+                        break;
+                    }
                 }
-            }
-            System.out.println(ans);
-            /*************************/
-            l.countDown();
-        });
+                System.out.println();
+                System.out.println(ans);
+                /*************************/
+                l.countDown();
+            });
 
-        l.await();
-        pool.shutdown();
+            l.await();
+            pool.shutdown();
+        }
     }
 
 }
