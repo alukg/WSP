@@ -47,14 +47,16 @@ public class Processor implements Runnable {
             try {
                 if (tasks.isEmpty()) {
                     stealTask();
+                    if (this.tasks.size() == 0)
+                        pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
                 } else {
                     Task t = tasks.pollFirst();
                     if (t != null)
                         t.handle(this);
-                    else
-                        pool.getVersionMonitor().inc();
+
                 }
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 return;
             }
         }
@@ -72,22 +74,21 @@ public class Processor implements Runnable {
                         int numOfTasksToSteal = currProc.tasks.size() / 2;
                         for (int i = 0; i < numOfTasksToSteal && currProc.tasks.size() > 1; i++) {
                             Task t = currProc.tasks.pollLast();
-                            if (t != null)
+                            if (t != null) {
+                                t.setProc(this);
                                 this.addTask(t);
-                            else
-                                pool.getVersionMonitor().inc();
+                            }
                         }
-                        System.out.println("Thread" + this.id + " stole " + tasks.size() + " tasks from Thread" + currProc.id + "\n" +
-                                "Thread" + currProc.id + " have " + currProc.tasks.size() + " tasks left");
+//                        System.out.println("Thread" + this.id + " stole " + tasks.size() + " tasks from Thread" + currProc.id + "\n" +
+//                                "Thread" + currProc.id + " have " + currProc.tasks.size() + " tasks left");
                         break;
                     } else {
                         counter++;
                     }
                 }
             }
-        } while (currVersion < pool.getVersionMonitor().getVersion() && tasks.size() == 0);
-        if (this.tasks.size() == 0)
-            pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
+        } while (tasks.size() == 0 && currVersion < pool.getVersionMonitor().getVersion());
+
     }
 
     /**
@@ -104,4 +105,7 @@ public class Processor implements Runnable {
         return pool;
     }
 
+    public LinkedBlockingDeque getTasks(){
+        return tasks;
+    }
 }

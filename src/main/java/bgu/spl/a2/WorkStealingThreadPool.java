@@ -1,5 +1,8 @@
 package bgu.spl.a2;
 
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * represents a work stealing thread pool - to understand what this class does
  * please refer to your assignment.
@@ -16,6 +19,8 @@ public class WorkStealingThreadPool {
     private Task task;
     private int numOfThreads;
     private VersionMonitor vm;
+    public AtomicInteger taskcreated = new AtomicInteger(1);
+    public AtomicInteger taskfinished = new AtomicInteger(0);
     /**
      * creates a {@link WorkStealingThreadPool} which has nthreads
      * {@link Processor}s. Note, threads should not get started until calling to
@@ -35,7 +40,7 @@ public class WorkStealingThreadPool {
         for (int id = 0; id < nthreads; id++) {
             processors[id] = new Processor(id, this);
         }
-        vm= new VersionMonitor();
+        vm= new VersionMonitor(this);
     }
 
     /**
@@ -46,8 +51,9 @@ public class WorkStealingThreadPool {
     public void submit(Task<?> task) {
         this.task = task;
         System.out.println("Submit first task to thread.");
-        processors[0].addTask(task);
-        vm.inc();
+        Random rand = new Random();
+        int firstProc = rand.nextInt(processors.length);
+        processors[firstProc].addTask(task);
     }
 
     /**
@@ -66,9 +72,11 @@ public class WorkStealingThreadPool {
         while (!task.getResult().isResolved()) {
             Thread.currentThread().sleep(1000);
         }
+        System.out.println("taskcreated: " + taskcreated + " taskfinsihed: " + taskfinished);
         for (Thread thread : threads){
             thread.interrupt();
         }
+
     }
 
     /**

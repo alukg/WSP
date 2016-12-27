@@ -50,8 +50,10 @@ public abstract class Task<R> {
             is_started = true;
             currProc = handler;
             start();
-        } else
+        } else {
+//            System.out.println("start returned task");
             end_callback.run();
+        }
     }
 
     /**
@@ -62,11 +64,15 @@ public abstract class Task<R> {
      */
     protected final void spawn(Task<?>... task) {
         int oldV;
+//        int num;
         for (Task t : task) {
-            currProc.addTask(t);
             do {
                 oldV = childsLocks.get();
             } while (!childsLocks.compareAndSet(oldV, childsLocks.get() + 1));
+            currProc.addTask(t);
+//          do {
+//                num = currProc.getPool().taskcreated.get();
+//            } while (!currProc.getPool().taskcreated.compareAndSet(num, currProc.getPool().taskcreated.get() + 1));
         }
     }
 
@@ -95,10 +101,16 @@ public abstract class Task<R> {
                 do {
                     oldV = fatherTask.childsLocks.get();
                 } while (!fatherTask.childsLocks.compareAndSet(oldV, fatherTask.childsLocks.get() - 1));
-                synchronized(fatherTask){
+                if (currProc.getPool().taskfinished.get() > 6)
+                    System.out.println(fatherTask.childsLocks.get() + " " + returned + "\n" +
+                            currProc.getPool().getProcessors()[0].getTasks().size() + "\n" +
+                            currProc.getPool().getProcessors()[1].getTasks().size() + "\n" +
+                            currProc.getPool().getProcessors()[2].getTasks().size() + "\n" +
+                            currProc.getPool().getProcessors()[3].getTasks().size() + "\n");
+                synchronized (fatherTask) {
                     if (fatherTask.childsLocks.get() == 0 && !fatherTask.returned) {
                         currProc.addTask(fatherTask);
-                        returned = true;
+                        fatherTask.returned = true;
                     }
                 }
             }
@@ -117,6 +129,10 @@ public abstract class Task<R> {
      * @param result - the task calculated result
      */
     protected final void complete(R result) {
+        int num2;
+        do {
+            num2 = currProc.getPool().taskfinished.get();
+        } while (!currProc.getPool().taskfinished.compareAndSet(num2, currProc.getPool().taskfinished.get() + 1));
         deferred.resolve(result);
     }
 
@@ -127,4 +143,7 @@ public abstract class Task<R> {
         return deferred;
     }
 
+    public void setProc(Processor p){
+        this.currProc = p;
+    }
 }

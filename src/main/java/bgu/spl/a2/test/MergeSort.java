@@ -21,6 +21,7 @@ public class MergeSort extends Task<int[]> {
 
     @Override
     protected void start() {
+//    System.out.println("Array length is " +array.length);
         if (array.length == 1) {
             complete(array);
         } else {
@@ -75,10 +76,14 @@ public class MergeSort extends Task<int[]> {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        for (int j = 0; j <= 1000; j++) {
+        for (int j = 0; j <= 100000; j++) {
             WorkStealingThreadPool pool = new WorkStealingThreadPool(4);
-            int n = 100000; //you may check on different number of elements if you like
-            int[] array = new Random().ints(n).toArray();
+            int n = 7; //you may check on different number of elements if you like
+            //int[] array = new Random().ints(n).toArray();
+            int[]array = new int[n];
+            for(int k=0;k<n;k++){
+                array[k]=7-k;
+            }
 
             MergeSort task = new MergeSort(array);
 

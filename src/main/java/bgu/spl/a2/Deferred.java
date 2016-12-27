@@ -48,13 +48,14 @@ public class Deferred<T> {
      * @throws IllegalStateException in the case where this object is already
      * resolved
      */
-    public void resolve(T value) {
+     synchronized public void resolve(T value) {
         result = value;
         isresolved=true;
         if(endCallback!=null){
             endCallback.run();
+            System.out.println("Callback run");
         }
-    }
+     }
 
     /**
      * add a callback to be called when this object is resolved. if while
@@ -69,9 +70,10 @@ public class Deferred<T> {
      * @param callback the callback to be called when the deferred object is
      * resolved
      */
-    public void whenResolved(Runnable callback) {
+    synchronized public void whenResolved(Runnable callback) {
         if(isResolved()){
             callback.run();
+            System.out.println("Callback run");
         }
         else{
             endCallback = callback;
