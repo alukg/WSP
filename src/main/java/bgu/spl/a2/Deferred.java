@@ -49,6 +49,9 @@ public class Deferred<T> {
      * resolved
      */
      synchronized public void resolve(T value) {
+         if (isresolved){
+             throw new IllegalStateException();
+         }
         result = value;
         isresolved=true;
         if(endCallback!=null){

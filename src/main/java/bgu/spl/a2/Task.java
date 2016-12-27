@@ -51,7 +51,7 @@ public abstract class Task<R> {
             currProc = handler;
             start();
         } else {
-//            System.out.println("start returned task");
+            System.out.println("start returned task");
             end_callback.run();
         }
     }

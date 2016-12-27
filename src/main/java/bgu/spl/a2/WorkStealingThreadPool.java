@@ -40,7 +40,7 @@ public class WorkStealingThreadPool {
         for (int id = 0; id < nthreads; id++) {
             processors[id] = new Processor(id, this);
         }
-        vm= new VersionMonitor(this);
+        vm = new VersionMonitor(this);
     }
 
     /**
@@ -76,7 +76,6 @@ public class WorkStealingThreadPool {
         for (Thread thread : threads){
             thread.interrupt();
         }
-
     }
 
     /**

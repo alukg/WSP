@@ -47,13 +47,10 @@ public class Processor implements Runnable {
             try {
                 if (tasks.isEmpty()) {
                     stealTask();
-                    if (this.tasks.size() == 0)
-                        pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
                 } else {
                     Task t = tasks.pollFirst();
                     if (t != null)
                         t.handle(this);
-
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -88,7 +85,8 @@ public class Processor implements Runnable {
                 }
             }
         } while (tasks.size() == 0 && currVersion < pool.getVersionMonitor().getVersion());
-
+        if (this.tasks.size() == 0)
+            pool.getVersionMonitor().await(pool.getVersionMonitor().getVersion());
     }
 
     /**
