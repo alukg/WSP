@@ -21,6 +21,7 @@ public class ManufactoringPlan {
 	* @return string containing product name
 	*/
     public String getProductName();
+
 	/**
 	* @return array of strings describing the plans tools names
 	*/

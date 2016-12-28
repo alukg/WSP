@@ -1,7 +1,31 @@
 package bgu.spl.a2.sim.tools;
 
-/**
- * Created by guy on 27/12/16.
- */
-public class NextPrimeHammer {
+import bgu.spl.a2.sim.Product;
+
+public class NextPrimeHammer implements Tool {
+    @Override
+    public String getType() {
+        return "np-hammer";
+    }
+
+    @Override
+    public long useOn(Product p) {
+        long checkedNum = p.getFinalId() + 1;
+        while (true) {
+            if (isPrime(checkedNum)) {
+                return checkedNum;
+            }
+            checkedNum++;
+        }
+
+    }
+
+    private boolean isPrime(long num) {
+        for (int j = 2; j <= Math.sqrt(num); j++) {
+            if (num % j == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
