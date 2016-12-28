@@ -51,7 +51,7 @@ public abstract class Task<R> {
             currProc = handler;
             start();
         } else {
-            System.out.println("start returned task");
+//            System.out.println("start returned task");
             end_callback.run();
         }
     }
@@ -101,12 +101,12 @@ public abstract class Task<R> {
                 do {
                     oldV = fatherTask.childsLocks.get();
                 } while (!fatherTask.childsLocks.compareAndSet(oldV, fatherTask.childsLocks.get() - 1));
-                if (currProc.getPool().taskfinished.get() > 6)
-                    System.out.println(fatherTask.childsLocks.get() + " " + returned + "\n" +
-                            currProc.getPool().getProcessors()[0].getTasks().size() + "\n" +
-                            currProc.getPool().getProcessors()[1].getTasks().size() + "\n" +
-                            currProc.getPool().getProcessors()[2].getTasks().size() + "\n" +
-                            currProc.getPool().getProcessors()[3].getTasks().size() + "\n");
+//                if (currProc.getPool().taskfinished.get() > 6)
+//                    System.out.println(fatherTask.childsLocks.get() + " " + returned + "\n" +
+//                            currProc.getPool().getProcessors()[0].getTasks().size() + "\n" +
+//                            currProc.getPool().getProcessors()[1].getTasks().size() + "\n" +
+//                            currProc.getPool().getProcessors()[2].getTasks().size() + "\n" +
+//                            currProc.getPool().getProcessors()[3].getTasks().size() + "\n");
                 synchronized (fatherTask) {
                     if (fatherTask.childsLocks.get() == 0 && !fatherTask.returned) {
                         currProc.addTask(fatherTask);

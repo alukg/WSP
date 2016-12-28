@@ -56,7 +56,7 @@ public class Deferred<T> {
         isresolved=true;
         if(endCallback!=null){
             endCallback.run();
-            System.out.println("Callback run");
+//            System.out.println("Callback run");
         }
      }
 
@@ -76,7 +76,7 @@ public class Deferred<T> {
     synchronized public void whenResolved(Runnable callback) {
         if(isResolved()){
             callback.run();
-            System.out.println("Callback run");
+//            System.out.println("Callback run");
         }
         else{
             endCallback = callback;

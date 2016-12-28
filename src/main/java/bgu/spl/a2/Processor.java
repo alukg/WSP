@@ -43,7 +43,7 @@ public class Processor implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 if (tasks.isEmpty()) {
                     stealTask();
@@ -54,7 +54,6 @@ public class Processor implements Runnable {
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                return;
             }
         }
     }
