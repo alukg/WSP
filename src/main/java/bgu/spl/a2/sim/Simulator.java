@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.SimpleTimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 
 /**
  * A class describing the simulator for part 2 of the assignment
