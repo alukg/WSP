@@ -1,5 +1,5 @@
 
-package json;
+package bgu.spl.a2.sim.json;
 
 import java.io.Serializable;
 import com.google.gson.annotations.Expose;
@@ -16,7 +16,7 @@ public class Wafe implements Serializable
     private int qty;
     @SerializedName("startId")
     @Expose
-    private int startId;
+    private long startId;
     private final static long serialVersionUID = -5096891835137059162L;
 
     public String getProduct() {
@@ -35,11 +35,11 @@ public class Wafe implements Serializable
         this.qty = qty;
     }
 
-    public int getStartId() {
+    public long getStartId() {
         return startId;
     }
 
-    public void setStartId(int startId) {
+    public void setStartId(long startId) {
         this.startId = startId;
     }
 

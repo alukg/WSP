@@ -1,6 +1,7 @@
 package bgu.spl.a2.sim.tools;
 
 import bgu.spl.a2.sim.Product;
+import bgu.spl.a2.sim.Warehouse;
 
 import java.math.BigInteger;
 
@@ -13,7 +14,7 @@ public class GCD_Screwdriver implements Tool {
         return "gs-driver";
     }
     public long useOn(Product p){
-        long num1 = p.getFinalId();
+        long num1 = p.getStartId();
         long num2 = Long.reverse(num1);
         long x, y;
 
@@ -24,5 +25,8 @@ public class GCD_Screwdriver implements Tool {
             num1 = y;
         }
         return num1;
+    }
+    void accept(Warehouse warehouse){
+        warehouse.releaseTool(this);
     }
 }

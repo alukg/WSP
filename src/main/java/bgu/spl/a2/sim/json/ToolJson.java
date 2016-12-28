@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Tool implements Serializable
+public class ToolJson implements Serializable
 {
 
     @SerializedName("tool")

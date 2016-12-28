@@ -1,6 +1,7 @@
 package bgu.spl.a2.sim.tools;
 
 import bgu.spl.a2.sim.Product;
+import bgu.spl.a2.sim.Warehouse;
 
 import java.util.Random;
 
@@ -14,7 +15,7 @@ public class RandomSumPliers implements Tool {
     @Override
     public long useOn(Product p) {
         long sum = 0;
-        long productId = p.getFinalId();
+        long productId = p.getStartId();
         long stop = productId % 10000;
 
         Random rand = new Random(productId);
@@ -24,4 +25,8 @@ public class RandomSumPliers implements Tool {
 
         return sum;
     }
+    void accept(Warehouse warehouse){
+        warehouse.releaseTool(this);
+    }
 }
+

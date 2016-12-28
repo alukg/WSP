@@ -1,6 +1,7 @@
 package bgu.spl.a2.sim.tools;
 
 import bgu.spl.a2.sim.Product;
+import bgu.spl.a2.sim.Warehouse;
 
 public class NextPrimeHammer implements Tool {
     @Override
@@ -10,7 +11,7 @@ public class NextPrimeHammer implements Tool {
 
     @Override
     public long useOn(Product p) {
-        long checkedNum = p.getFinalId() + 1;
+        long checkedNum = p.getStartId() + 1;
         while (true) {
             if (isPrime(checkedNum)) {
                 return checkedNum;
@@ -27,5 +28,8 @@ public class NextPrimeHammer implements Tool {
             }
         }
         return true;
+    }
+    void accept(Warehouse warehouse){
+        warehouse.releaseTool(this);
     }
 }

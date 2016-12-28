@@ -1,5 +1,5 @@
 
-package json;
+package bgu.spl.a2.sim.json;
 
 import java.io.Serializable;
 import java.util.List;

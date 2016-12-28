@@ -6,22 +6,15 @@
 package bgu.spl.a2.sim;
 
 import bgu.spl.a2.WorkStealingThreadPool;
+import bgu.spl.a2.sim.json.FactoryPlan;
 import bgu.spl.a2.sim.tools.Tool;
 import com.google.gson.*;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.sun.org.apache.regexp.internal.RE;
-import jdk.nashorn.api.scripting.JSObject;
-import jdk.nashorn.internal.parser.JSONParser;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.SimpleTimeZone;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -62,16 +55,17 @@ public class Simulator {
 		try {
 			String JSON_PATH = "Wave.json";
 			Gson gson = new Gson();
-			Type ReviewType = new TypeToken<String>() {
-			}.getType();
+			Type ReviewType = new TypeToken<FactoryPlan>(){}.getType();
 			JsonReader reader = new JsonReader(new FileReader(JSON_PATH));
-			JsonElement data = gson.fromJson(reader, JsonElement.class);
-			numofThreads = data.getAsJsonObject().get("threads").getAsInt();
-			tools = gson.fromJson(data.getAsJsonObject().get("tools"),new TypeToken<ArrayList<Tool>>(){}.getType());
+			FactoryPlan data = gson.fromJson(reader, ReviewType);
 		} catch (FileNotFoundException e) {
 			System.out.println("file not found");
 			System.exit(1);
+		} catch (Exception e){
+			System.out.println("Coundlnt format json object");
+			System.exit(2);
 		}
+
 
 	}
 }

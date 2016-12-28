@@ -1,9 +1,18 @@
 package bgu.spl.a2.sim;
 
+import bgu.spl.a2.sim.tools.GCD_Screwdriver;
+import bgu.spl.a2.sim.tools.NextPrimeHammer;
+import bgu.spl.a2.sim.tools.RandomSumPliers;
 import bgu.spl.a2.sim.tools.Tool;
 import bgu.spl.a2.sim.conf.ManufactoringPlan;
 import bgu.spl.a2.Deferred;
+import bgu.spl.a2.Task;
+import bgu.spl.a2.test.MergeSort;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -16,22 +25,22 @@ import java.util.concurrent.LinkedBlockingQueue;
  * only be private!!!
  */
 public class Warehouse {
-
-    private CountDownLatch gcdLatch;
-    private CountDownLatch primeLatch;
-    private CountDownLatch randSumLatch;
-
+        HashMap<String,ManufactoringPlan> mpList;
+        ConcurrentLinkedQueue<GCD_Screwdriver> gcd;
+        ConcurrentLinkedQueue<RandomSumPliers> rdm;
+        ConcurrentLinkedQueue<NextPrimeHammer> prm;
     /**
      * Constructor
      */
     public Warehouse(){
-        gcdLatch = new CountDownLatch(0);
-        primeLatch = new CountDownLatch(0);
-        randSumLatch = new CountDownLatch(0);
+        mpList = new HashMap<>();
+        gcd = new ConcurrentLinkedQueue<>();
+        rdm = new ConcurrentLinkedQueue<>();
+        prm = new ConcurrentLinkedQueue<>();
     }
 
     /**
-     * Tool acquisition procedure
+     * ToolJson acquisition procedure
      * Note that this procedure is non-blocking and should return immediatly
      *
      * @param type - string describing the required tool
@@ -42,12 +51,21 @@ public class Warehouse {
     }
 
     /**
-     * Tool return procedure - releases a tool which becomes available in the warehouse upon completion.
+     * ToolJson return procedure - releases a tool which becomes available in the warehouse upon completion.
      *
      * @param tool - The tool to be returned
      */
     public void releaseTool(Tool tool){
-
+        tool.accept(this);
+    }
+    private void releaseTool(GCD_Screwdriver tool){
+        gcd.add(tool);
+    }
+    private void releaseTool(NextPrimeHammer tool){
+        prm.add(tool);
+    }
+    private void releaseTool(RandomSumPliers tool){
+        rdm.add(tool);
     }
 
     /**
@@ -57,7 +75,7 @@ public class Warehouse {
      * @return A ManufactoringPlan for product
      */
     public ManufactoringPlan getPlan(String product){
-
+        return mpList.get(product);
     }
 
     /**
@@ -66,7 +84,7 @@ public class Warehouse {
      * @param plan - a ManufactoringPlan to be stored
      */
     public void addPlan(ManufactoringPlan plan){
-
+        mpList.put(plan.getProductName(),plan);
     }
 
     /**
@@ -76,8 +94,19 @@ public class Warehouse {
      * @param qty  - amount of tools of type tool to be stored
      */
     public void addTool(Tool tool, int qty){
-        for(int i=1;i<=qty;i++){
-
+        switch(tool.getType()){
+            case "gs-driver":
+                for(int i=0;i<qty;i++){
+                    gcd.add(new GCD_Screwdriver());
+                }
+            case "np-hammer":
+                for(int i=0;i<qty;i++){
+                    prm.add(new NextPrimeHammer());
+                }
+            case "rs-pliers":
+                for(int i=0;i<qty;i++){
+                    rdm.add(new RandomSumPliers());
+                }
         }
     }
 

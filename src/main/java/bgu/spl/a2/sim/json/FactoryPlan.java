@@ -1,5 +1,5 @@
 
-package json;
+package bgu.spl.a2.sim.json;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,9 +12,9 @@ public class FactoryPlan implements Serializable
     @SerializedName("threads")
     @Expose
     private int threads;
-    @SerializedName("tools")
+    @SerializedName("toolJsons")
     @Expose
-    private List<Tool> tools = null;
+    private List<ToolJson> toolJsons = null;
     @SerializedName("plans")
     @Expose
     private List<Plan> plans = null;
@@ -31,12 +31,12 @@ public class FactoryPlan implements Serializable
         this.threads = threads;
     }
 
-    public List<Tool> getTools() {
-        return tools;
+    public List<ToolJson> getToolJsons() {
+        return toolJsons;
     }
 
-    public void setTools(List<Tool> tools) {
-        this.tools = tools;
+    public void setToolJsons(List<ToolJson> toolJsons) {
+        this.toolJsons = toolJsons;
     }
 
     public List<Plan> getPlans() {
