@@ -6,17 +6,19 @@
 package bgu.spl.a2.sim;
 
 import bgu.spl.a2.WorkStealingThreadPool;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import bgu.spl.a2.sim.tools.Tool;
+import com.google.gson.*;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.sun.org.apache.regexp.internal.RE;
 import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.internal.parser.JSONParser;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.SimpleTimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -53,16 +55,20 @@ public class Simulator {
 	}
 
 	public static void main(String[] args) {
+		final int numofThreads;
+		ArrayList<Tool> tools = new ArrayList<>();
 		try {
-			String JSON_PATH = "/Wave.json";
+			String JSON_PATH = "Wave.json";
 			Gson gson = new Gson();
 			Type ReviewType = new TypeToken<String>() {
 			}.getType();
 			JsonReader reader = new JsonReader(new FileReader(JSON_PATH));
-			String data = gson.fromJson(reader,ReviewType);
-			System.out.println("shahar");
+			JsonElement data = gson.fromJson(reader, JsonElement.class);
+			numofThreads = data.getAsJsonObject().get("threads").getAsInt();
+			tools = gson.fromJson(data.getAsJsonObject().get("tools"),new TypeToken<ArrayList<Tool>>(){}.getType());
 		} catch (FileNotFoundException e) {
-			System.out.println("shtok");
+			System.out.println("file not found");
+			System.exit(1);
 		}
 
 	}
