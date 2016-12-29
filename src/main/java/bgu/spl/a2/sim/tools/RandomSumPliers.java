@@ -25,8 +25,6 @@ public class RandomSumPliers implements Tool {
 
         return sum;
     }
-    void accept(Warehouse warehouse){
-        warehouse.releaseTool(this);
-    }
+
 }
 

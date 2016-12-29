@@ -60,4 +60,7 @@ public class Product {
     	parts.add(p);
 	}
 
+	public void setFinalID(long num){
+    	this.finalID=num;
+	}
 }

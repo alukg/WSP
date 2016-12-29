@@ -3,37 +3,49 @@ package bgu.spl.a2.sim.tasks;
 import bgu.spl.a2.Task;
 import bgu.spl.a2.sim.Product;
 import bgu.spl.a2.sim.Warehouse;
-import bgu.spl.a2.sim.conf.ManufactoringPlan;
 
-import java.awt.color.ProfileDataException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by shahar on 28/12/2016.
  */
 public class Manufacture extends Task<Product> {
-    Product p;
+    Product product;
     Warehouse warehouse;
     ArrayList<Manufacture>tasks = new ArrayList<>();
-    public Manufacture(Product p, Warehouse warehouse) {
-        this.p =p;
+    public Manufacture(Product product, Warehouse warehouse) {
+        this.product = product;
         this.warehouse = warehouse;
     }
     @Override
     protected void start() {
-        String[] parts = warehouse.getPlan(p.getName()).getParts();
-        String[] tools = warehouse.getPlan(p.getName()).getTool();
+        String[] parts = warehouse.getPlan(product.getName()).getParts();
+        String[] tools = warehouse.getPlan(product.getName()).getTool();
         if(parts.length==0)
-            complete(p);
+            complete(product);
         else{
             for(String p1 : parts){
-                Manufacture task = new Manufacture(new Product(p.getStartId()+1,p1),warehouse);
+                Manufacture task = new Manufacture(new Product(product.getStartId()+1,p1),warehouse);
                 spawn(task);
                 tasks.add(task);
             }
             whenResolved(tasks,() -> {
-
+                tasks.forEach(task -> {
+                    product.addPart(task.getResult().get());
+                });
+                ArrayList<ToolTask> tooltasks = new ArrayList<>();
+                for(String tool : tools){
+                    ToolTask tooltask = new ToolTask(tool, product,warehouse);
+                    spawn(tooltask);
+                }
+                this.whenResolved(tooltasks ,()->{
+                    Long finalId = new Long(product.getStartId());
+                    for(ToolTask tsk : tooltasks){
+                        finalId+= tsk.getResult().get();
+                    }
+                    product.setFinalID( finalId);
+                    complete(product);
+                });
             });
         }
 

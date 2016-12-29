@@ -26,7 +26,5 @@ public class GCD_Screwdriver implements Tool {
         }
         return num1;
     }
-    void accept(Warehouse warehouse){
-        warehouse.releaseTool(this);
-    }
+
 }
