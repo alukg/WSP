@@ -17,5 +17,4 @@ public interface Tool {
 	*/
     public abstract long useOn(Product p);
 
-    abstract void accept(Warehouse warehouse);
 }

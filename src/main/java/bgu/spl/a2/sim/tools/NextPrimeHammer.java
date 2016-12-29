@@ -28,7 +28,5 @@ public class NextPrimeHammer implements Tool {
         }
         return true;
     }
-    void accept(Warehouse warehouse){
-        warehouse.releaseTool(this);
-    }
+
 }

@@ -1,5 +1,7 @@
 package bgu.spl.a2.sim.tasks;
 
+import bgu.spl.a2.Deferred;
+import bgu.spl.a2.sim.Product;
 import bgu.spl.a2.sim.Warehouse;
 import bgu.spl.a2.sim.tools.GCD_Screwdriver;
 import bgu.spl.a2.sim.tools.NextPrimeHammer;
@@ -10,21 +12,29 @@ import bgu.spl.a2.Task;
 /**
  * Created by shahar on 28/12/2016.
  */
-public class ToolTask extends Task<Tool> {
-    Tool t;
-    Warehouse w;
+public class ToolTask extends Task<Long> {
+    Warehouse warehouse;
+    String toolName;
+    Product product;
+    Long useOn;
 
-    void
+    public ToolTask(String toolName, Product product, Warehouse warehouse) {
+        this.warehouse = warehouse;
+        this.product = product;
+        this.toolName = toolName;
+        useOn=new Long(0);
+    }
+
     @Override
 
     protected void start() {
-        switch (t.getType()) {
-            case "gs-driver":
-                    case "np-hammer":
-
-            case "rs-pliers":
-
-        }
+        Deferred<Tool> t = warehouse.acquireTool(toolName);
+        t.whenResolved(() -> {
+            for (Product part : product.getParts()){
+                useOn+=t.get().useOn(product);
+            }
+            warehouse.releaseTool(t.get());
+            complete(useOn);
+        });
     }
-}
 }

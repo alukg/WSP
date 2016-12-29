@@ -13,6 +13,7 @@ import bgu.spl.a2.test.MergeSort;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,9 +31,13 @@ public class Warehouse {
     ConcurrentLinkedQueue<GCD_Screwdriver> gcd;
     ConcurrentLinkedQueue<RandomSumPliers> rdm;
     ConcurrentLinkedQueue<NextPrimeHammer> prm;
-    ConcurrentLinkedQueue<Deferred<GCD_Screwdriver>> gcdDefferds;
-    ConcurrentLinkedQueue<Deferred<RandomSumPliers>> rdmDefferds;
-    ConcurrentLinkedQueue<Deferred<NextPrimeHammer>> prmDefferds;
+    ConcurrentLinkedQueue<Deferred<Tool>> gcdDefferds;
+    ConcurrentLinkedQueue<Deferred<Tool>> rdmDefferds;
+    ConcurrentLinkedQueue<Deferred<Tool>> prmDefferds;
+    Integer lockGCD;
+    Integer lockRDM;
+    Integer lockPRM;
+    
 
     /**
      * Constructor
@@ -45,6 +50,9 @@ public class Warehouse {
         gcdDefferds = new ConcurrentLinkedQueue<>();
         rdmDefferds = new ConcurrentLinkedQueue<>();
         prmDefferds = new ConcurrentLinkedQueue<>();
+        lockGCD = new Integer(0);
+        lockRDM = new Integer(0);
+        lockPRM = new Integer(0);
     }
 
     /**
@@ -55,7 +63,58 @@ public class Warehouse {
      * @return a deferred promise for the  requested tool
      */
     public Deferred<Tool> acquireTool(String type) {
+        switch (type) {
+            case "gs-driver":
+                return acquireToolGCD();
+            case "np-hammer":
+                return acquireToolPRM();
+            case "rs-pliers":
+                return acquireToolRDM();
+            default:
+                throw new NoSuchElementException("no such tool");
+        }
+    }
 
+    private Deferred<Tool> acquireToolRDM() {
+        Tool tool = rdm.poll();
+        if(tool == null){
+            Deferred<Tool> toolDef= new Deferred<Tool>();
+            rdmDefferds.add(toolDef);
+            return toolDef;
+        }
+        else{
+            Deferred<Tool> toolDef = new Deferred<>();
+            toolDef.resolve(tool);
+            return toolDef;
+        }
+    }
+
+    private Deferred<Tool> acquireToolPRM() {
+        Tool tool = prm.poll();
+        if(tool == null){
+            Deferred<Tool> toolDef= new Deferred<Tool>();
+            prmDefferds.add(toolDef);
+            return toolDef;
+        }
+        else{
+            Deferred<Tool> toolDef = new Deferred<>();
+            toolDef.resolve(tool);
+            return toolDef;
+        }
+    }
+
+    private Deferred<Tool> acquireToolGCD() {
+        Tool tool = gcd.poll();
+        if(tool == null){
+            Deferred<Tool> toolDef= new Deferred<Tool>();
+            gcdDefferds.add(toolDef);
+            return toolDef;
+        }
+        else{
+            Deferred<Tool> toolDef = new Deferred<>();
+            toolDef.resolve(tool);
+            return toolDef;
+        }
     }
 
     /**
@@ -64,20 +123,46 @@ public class Warehouse {
      * @param tool - The tool to be returned
      */
     public void releaseTool(Tool tool) {
-        tool.accept(this);
+        switch (tool.getType()) {
+            case "gs-driver":
+                releaseTool((GCD_Screwdriver)tool);
+            case "np-hammer":
+                releaseTool((NextPrimeHammer) tool);
+            case "rs-pliers":
+                releaseTool((RandomSumPliers) tool);
+        }
+    }
+    private void releaseTool(GCD_Screwdriver tool){
+        synchronized (lockGCD) {
+            Deferred<Tool> toolDeferred = gcdDefferds.poll();
+            if (toolDeferred == null) {
+                gcd.add(tool);
+            } else {
+                toolDeferred.resolve(tool);
+            }
+        }
+    }
+    private void releaseTool(NextPrimeHammer tool){
+        synchronized (lockPRM) {
+            Deferred<Tool> toolDeferred = prmDefferds.poll();
+            if (toolDeferred == null) {
+                prm.add(tool);
+            } else {
+                toolDeferred.resolve(tool);
+            }
+        }
+    }
+    private void releaseTool(RandomSumPliers tool){
+        synchronized (lockRDM) {
+            Deferred<Tool> toolDeferred = rdmDefferds.poll();
+            if (toolDeferred == null) {
+                rdm.add(tool);
+            } else {
+                toolDeferred.resolve(tool);
+            }
+        }
     }
 
-    private void releaseTool(GCD_Screwdriver tool) {
-        gcd.add(tool);
-    }
-
-    private void releaseTool(NextPrimeHammer tool) {
-        prm.add(tool);
-    }
-
-    private void releaseTool(RandomSumPliers tool) {
-        rdm.add(tool);
-    }
 
     /**
      * Getter for ManufactoringPlans
