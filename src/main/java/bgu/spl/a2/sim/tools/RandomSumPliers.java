@@ -14,16 +14,20 @@ public class RandomSumPliers implements Tool {
 
     @Override
     public long useOn(Product p) {
-        long sum = 0;
-        long productId = p.getStartId();
-        long stop = productId % 10000;
+        long returnValue = 0;
+        for(Product part : p.getParts()){
+            long sum = 0;
+            long productId = part.getFinalId();
+            long stop = productId % 10000;
 
-        Random rand = new Random(productId);
-        for (int i=1;i<=stop;i++) {
-            sum = sum + rand.nextInt();
+            Random rand = new Random(productId);
+            System.out.println(rand.nextInt() + " " + productId);
+            for (int i=1;i<=stop;i++) {
+                sum += rand.nextInt();
+            }
+            returnValue += Math.abs(sum);
         }
-
-        return sum;
+        return returnValue;
     }
 
 }

@@ -13,18 +13,23 @@ public class GCD_Screwdriver implements Tool {
     public String getType(){
         return "gs-driver";
     }
-    public long useOn(Product p){
-        long num1 = p.getStartId();
-        long num2 = Long.reverse(num1);
-        long x, y;
 
-        while(num2%num1 !=0){
-            x=num1;
-            y=num2%num1;
-            num2 = x;
-            num1 = y;
+    public long useOn(Product p){
+        long returnValue = 0;
+        for(Product part : p.getParts()){
+            long num1 = part.getFinalId();
+            long num2 = Long.reverse(num1);
+            long x, y;
+
+            while(num2%num1 !=0){
+                x=num1;
+                y=num2%num1;
+                num2 = x;
+                num1 = y;
+            }
+            returnValue += Math.abs(num1);
         }
-        return num1;
+        return returnValue;
     }
 
 }

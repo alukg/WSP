@@ -12,7 +12,7 @@ public class FactoryPlan implements Serializable
     @SerializedName("threads")
     @Expose
     private int threads;
-    @SerializedName("toolJsons")
+    @SerializedName("tools")
     @Expose
     private List<ToolJson> toolJsons = null;
     @SerializedName("plans")

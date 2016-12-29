@@ -126,10 +126,13 @@ public class Warehouse {
         switch (tool.getType()) {
             case "gs-driver":
                 releaseTool((GCD_Screwdriver)tool);
+                break;
             case "np-hammer":
                 releaseTool((NextPrimeHammer) tool);
+                break;
             case "rs-pliers":
                 releaseTool((RandomSumPliers) tool);
+                break;
         }
     }
     private void releaseTool(GCD_Screwdriver tool){
@@ -195,14 +198,17 @@ public class Warehouse {
                 for (int i = 0; i < qty; i++) {
                     gcd.add(new GCD_Screwdriver());
                 }
+                break;
             case "np-hammer":
                 for (int i = 0; i < qty; i++) {
                     prm.add(new NextPrimeHammer());
                 }
+                break;
             case "rs-pliers":
                 for (int i = 0; i < qty; i++) {
                     rdm.add(new RandomSumPliers());
                 }
+                break;
         }
     }
 

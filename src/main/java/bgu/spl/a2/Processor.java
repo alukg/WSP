@@ -43,6 +43,7 @@ public class Processor implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Run Thread");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 if (tasks.isEmpty()) {

@@ -11,13 +11,18 @@ public class NextPrimeHammer implements Tool {
 
     @Override
     public long useOn(Product p) {
-        long checkedNum = p.getStartId() + 1;
-        while (true) {
-            if (isPrime(checkedNum)) {
-                return checkedNum;
+        long returnValue = 0;
+        for(Product part : p.getParts()){
+            long checkedNum = part.getFinalId() + 1;
+            while (true) {
+                if (isPrime(checkedNum)) {
+                    break;
+                }
+                checkedNum++;
             }
-            checkedNum++;
+            returnValue += Math.abs(checkedNum);
         }
+        return returnValue;
     }
 
     private boolean isPrime(long num) {

@@ -34,18 +34,29 @@ public class Manufacture extends Task<Product> {
                     product.addPart(task.getResult().get());
                 });
                 ArrayList<ToolTask> tooltasks = new ArrayList<>();
-                for(String tool : tools){
-                    ToolTask tooltask = new ToolTask(tool, product,warehouse);
-                    spawn(tooltask);
-                }
-                this.whenResolved(tooltasks ,()->{
-                    Long finalId = new Long(product.getStartId());
-                    for(ToolTask tsk : tooltasks){
-                        finalId+= tsk.getResult().get();
+                if(tools.length==0){
+                    Long finalIdnoTools = new Long(product.getStartId());
+                    for(Product partnoTools : product.getParts()){
+                        finalIdnoTools += partnoTools.getFinalId();
                     }
-                    product.setFinalID( finalId);
+                    product.setFinalID(finalIdnoTools);
                     complete(product);
-                });
+                }
+                else {
+                    for (String tool : tools) {
+                        ToolTask tooltask = new ToolTask(tool, product, warehouse);
+                        spawn(tooltask);
+                        tooltasks.add(tooltask);
+                    }
+                    whenResolved(tooltasks, () -> {
+                        Long finalId = new Long(product.getStartId());
+                        for (ToolTask tsk : tooltasks) {
+                            finalId += tsk.getResult().get();
+                        }
+                        product.setFinalID(finalId);
+                        complete(product);
+                    });
+                }
             });
         }
 

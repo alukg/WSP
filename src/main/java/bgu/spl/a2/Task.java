@@ -18,7 +18,6 @@ public abstract class Task<R> {
     private Task thisTask = this;
     private Deferred deferred = new Deferred<R>();
     private boolean is_started = false;
-    private boolean returned = false;
     private Runnable end_callback;
     private Processor currProc;
     private AtomicInteger childsLocks = new AtomicInteger(0);
@@ -51,7 +50,6 @@ public abstract class Task<R> {
             currProc = handler;
             start();
         } else {
-//            System.out.println("start returned task");
             end_callback.run();
         }
     }
@@ -96,7 +94,7 @@ public abstract class Task<R> {
                 fatherTask = task;
             }
 
-            public void run() {
+            synchronized public void run() {
                 int oldV;
                 do {
                     oldV = fatherTask.childsLocks.get();
@@ -107,11 +105,8 @@ public abstract class Task<R> {
 //                            currProc.getPool().getProcessors()[1].getTasks().size() + "\n" +
 //                            currProc.getPool().getProcessors()[2].getTasks().size() + "\n" +
 //                            currProc.getPool().getProcessors()[3].getTasks().size() + "\n");
-                synchronized (fatherTask) {
-                    if (fatherTask.childsLocks.get() == 0 && !fatherTask.returned) {
-                        currProc.addTask(fatherTask);
-                        fatherTask.returned = true;
-                    }
+                if (fatherTask.childsLocks.get() == 0) {
+                    currProc.addTask(fatherTask);
                 }
             }
         }
@@ -143,7 +138,7 @@ public abstract class Task<R> {
         return deferred;
     }
 
-    public void setProc(Processor p){
+    public void setProc(Processor p) {
         this.currProc = p;
     }
 }

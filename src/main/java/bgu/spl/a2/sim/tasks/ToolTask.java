@@ -16,13 +16,12 @@ public class ToolTask extends Task<Long> {
     Warehouse warehouse;
     String toolName;
     Product product;
-    Long useOn;
+    Long useOn = new Long(0);
 
     public ToolTask(String toolName, Product product, Warehouse warehouse) {
         this.warehouse = warehouse;
         this.product = product;
         this.toolName = toolName;
-        useOn=new Long(0);
     }
 
     @Override
@@ -30,11 +29,8 @@ public class ToolTask extends Task<Long> {
     protected void start() {
         Deferred<Tool> t = warehouse.acquireTool(toolName);
         t.whenResolved(() -> {
-            for (Product part : product.getParts()){
-                useOn+=t.get().useOn(product);
-            }
+            complete(t.get().useOn(product));
             warehouse.releaseTool(t.get());
-            complete(useOn);
         });
     }
 }

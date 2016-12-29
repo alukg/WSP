@@ -50,7 +50,6 @@ public class WorkStealingThreadPool {
      */
     public void submit(Task<?> task) {
         this.task = task;
-        System.out.println("Submit first task to thread.");
         Random rand = new Random();
         int firstProc = rand.nextInt(processors.length);
         processors[firstProc].addTask(task);
