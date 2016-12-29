@@ -20,7 +20,7 @@ public class FactoryPlan implements Serializable
     private List<Plan> plans = null;
     @SerializedName("waves")
     @Expose
-    private List<List<Wafe>> waves = null;
+    private List<List<Wave>> waves = null;
     private final static long serialVersionUID = 962929236297046047L;
 
     public int getThreads() {
@@ -47,11 +47,11 @@ public class FactoryPlan implements Serializable
         this.plans = plans;
     }
 
-    public List<List<Wafe>> getWaves() {
+    public List<List<Wave>> getWaves() {
         return waves;
     }
 
-    public void setWaves(List<List<Wafe>> waves) {
+    public void setWaves(List<List<Wave>> waves) {
         this.waves = waves;
     }
 

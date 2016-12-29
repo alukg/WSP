@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Wafe implements Serializable
+public class Wave implements Serializable
 {
 
     @SerializedName("product")

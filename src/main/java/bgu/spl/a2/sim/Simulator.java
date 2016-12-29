@@ -17,7 +17,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-
 /**
  * A class describing the simulator for part 2 of the assignment
  */
@@ -27,7 +26,6 @@ public class Simulator {
 	public Simulator(WorkStealingThreadPool myWorkStealingThreadPool) {
 		this.WSP = myWorkStealingThreadPool;
 	}
-
 
 	/**
 	 * Begin the simulation
@@ -52,20 +50,28 @@ public class Simulator {
 	public static void main(String[] args) {
 		final int numofThreads;
 		ArrayList<Tool> tools = new ArrayList<>();
+		FactoryPlan data = null;
 		try {
 			String JSON_PATH = "Wave.json";
 			Gson gson = new Gson();
 			Type ReviewType = new TypeToken<FactoryPlan>(){}.getType();
 			JsonReader reader = new JsonReader(new FileReader(JSON_PATH));
-			FactoryPlan data = gson.fromJson(reader, ReviewType);
+			data = gson.fromJson(reader, ReviewType);
 		} catch (FileNotFoundException e) {
 			System.out.println("file not found");
 			System.exit(1);
 		} catch (Exception e){
-			System.out.println("Coundlnt format json object");
+			System.out.println("Can't format json object");
 			System.exit(2);
 		}
 
 
+		Simulator simulator = new Simulator();
+
+		getDataFromFactoryPlan(data);
+	}
+
+	private static void getDataFromFactoryPlan(FactoryPlan data){
+		data.getPlans();
 	}
 }

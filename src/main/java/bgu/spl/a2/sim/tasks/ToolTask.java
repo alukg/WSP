@@ -16,15 +16,15 @@ public class ToolTask extends Task<Tool> {
 
     void
     @Override
+
     protected void start() {
-        switch(t.getType()){
+        switch (t.getType()) {
             case "gs-driver":
-                while()
-            case "np-hammer":
+                    case "np-hammer":
 
             case "rs-pliers":
 
         }
-        }
     }
+}
 }
