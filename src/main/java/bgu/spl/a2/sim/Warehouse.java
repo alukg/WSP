@@ -25,18 +25,25 @@ import java.util.concurrent.LinkedBlockingQueue;
  * only be private!!!
  */
 public class Warehouse {
-        HashMap<String,ManufactoringPlan> mpList;
-        ConcurrentLinkedQueue<GCD_Screwdriver> gcd;
-        ConcurrentLinkedQueue<RandomSumPliers> rdm;
-        ConcurrentLinkedQueue<NextPrimeHammer> prm;
+    HashMap<String, ManufactoringPlan> mpList;
+    ConcurrentLinkedQueue<GCD_Screwdriver> gcd;
+    ConcurrentLinkedQueue<RandomSumPliers> rdm;
+    ConcurrentLinkedQueue<NextPrimeHammer> prm;
+    ConcurrentLinkedQueue<Deferred<GCD_Screwdriver>> gcdDefferds;
+    ConcurrentLinkedQueue<Deferred<RandomSumPliers>> rdmDefferds;
+    ConcurrentLinkedQueue<Deferred<NextPrimeHammer>> prmDefferds;
+
     /**
      * Constructor
      */
-    public Warehouse(){
+    public Warehouse() {
         mpList = new HashMap<>();
         gcd = new ConcurrentLinkedQueue<>();
         rdm = new ConcurrentLinkedQueue<>();
         prm = new ConcurrentLinkedQueue<>();
+        gcdDefferds = new ConcurrentLinkedQueue<>();
+        rdmDefferds = new ConcurrentLinkedQueue<>();
+        prmDefferds = new ConcurrentLinkedQueue<>();
     }
 
     /**
@@ -46,7 +53,7 @@ public class Warehouse {
      * @param type - string describing the required tool
      * @return a deferred promise for the  requested tool
      */
-    public Deferred<Tool> acquireTool(String type){
+    public Deferred<Tool> acquireTool(String type) {
 
     }
 
@@ -55,16 +62,19 @@ public class Warehouse {
      *
      * @param tool - The tool to be returned
      */
-    public void releaseTool(Tool tool){
+    public void releaseTool(Tool tool) {
         tool.accept(this);
     }
-    private void releaseTool(GCD_Screwdriver tool){
+
+    private void releaseTool(GCD_Screwdriver tool) {
         gcd.add(tool);
     }
-    private void releaseTool(NextPrimeHammer tool){
+
+    private void releaseTool(NextPrimeHammer tool) {
         prm.add(tool);
     }
-    private void releaseTool(RandomSumPliers tool){
+
+    private void releaseTool(RandomSumPliers tool) {
         rdm.add(tool);
     }
 
@@ -74,7 +84,7 @@ public class Warehouse {
      * @param product - a string with the product name for which a ManufactoringPlan is desired
      * @return A ManufactoringPlan for product
      */
-    public ManufactoringPlan getPlan(String product){
+    public ManufactoringPlan getPlan(String product) {
         return mpList.get(product);
     }
 
@@ -83,8 +93,8 @@ public class Warehouse {
      *
      * @param plan - a ManufactoringPlan to be stored
      */
-    public void addPlan(ManufactoringPlan plan){
-        mpList.put(plan.getProductName(),plan);
+    public void addPlan(ManufactoringPlan plan) {
+        mpList.put(plan.getProductName(), plan);
     }
 
     /**
@@ -93,18 +103,18 @@ public class Warehouse {
      * @param tool - type of tool to be stored
      * @param qty  - amount of tools of type tool to be stored
      */
-    public void addTool(Tool tool, int qty){
-        switch(tool.getType()){
+    public void addTool(Tool tool, int qty) {
+        switch (tool.getType()) {
             case "gs-driver":
-                for(int i=0;i<qty;i++){
+                for (int i = 0; i < qty; i++) {
                     gcd.add(new GCD_Screwdriver());
                 }
             case "np-hammer":
-                for(int i=0;i<qty;i++){
+                for (int i = 0; i < qty; i++) {
                     prm.add(new NextPrimeHammer());
                 }
             case "rs-pliers":
-                for(int i=0;i<qty;i++){
+                for (int i = 0; i < qty; i++) {
                     rdm.add(new RandomSumPliers());
                 }
         }

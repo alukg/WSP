@@ -18,7 +18,6 @@ public class NextPrimeHammer implements Tool {
             }
             checkedNum++;
         }
-
     }
 
     private boolean isPrime(long num) {

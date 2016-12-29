@@ -10,21 +10,21 @@ import bgu.spl.a2.Task;
 /**
  * Created by shahar on 28/12/2016.
  */
-public class getToolTask extends Task<Tool> {
+public class ToolTask extends Task<Tool> {
     Tool t;
     Warehouse w;
 
     void
     @Override
+
     protected void start() {
-        switch(t.getType()){
+        switch (t.getType()) {
             case "gs-driver":
-                while()
-            case "np-hammer":
+                    case "np-hammer":
 
             case "rs-pliers":
 
         }
-        }
     }
+}
 }
