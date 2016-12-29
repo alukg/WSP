@@ -24,6 +24,6 @@ public class ManufactoringPlan {
 	/**
 	* @return array of strings describing the plans tools names
 	*/
-    public String[] getToolJsons();
+    public String[] getTool();
 
 }

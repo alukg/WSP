@@ -10,7 +10,7 @@ import bgu.spl.a2.Task;
 /**
  * Created by shahar on 28/12/2016.
  */
-public class getToolTask extends Task<Tool> {
+public class ToolTask extends Task<Tool> {
     Tool t;
     Warehouse w;
 
