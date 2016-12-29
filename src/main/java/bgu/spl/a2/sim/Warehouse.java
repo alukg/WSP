@@ -1,5 +1,6 @@
 package bgu.spl.a2.sim;
 
+import bgu.spl.a2.sim.json.FactoryPlan;
 import bgu.spl.a2.sim.tools.GCD_Screwdriver;
 import bgu.spl.a2.sim.tools.NextPrimeHammer;
 import bgu.spl.a2.sim.tools.RandomSumPliers;
@@ -47,7 +48,7 @@ public class Warehouse {
     }
 
     /**
-     * ToolJson acquisition procedure
+     * Tool acquisition procedure
      * Note that this procedure is non-blocking and should return immediatly
      *
      * @param type - string describing the required tool
