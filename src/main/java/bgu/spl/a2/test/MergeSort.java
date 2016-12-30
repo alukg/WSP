@@ -78,12 +78,8 @@ public class MergeSort extends Task<int[]> {
     public static void main(String[] args) throws InterruptedException {
         for (int j = 0; j <= 100000; j++) {
             WorkStealingThreadPool pool = new WorkStealingThreadPool(4);
-            int n = 100000; //you may check on different number of elements if you like
-            //int[] array = new Random().ints(n).toArray();
-            int[]array = new int[n];
-            for(int k=0;k<n;k++){
-                array[k]=7-k;
-            }
+            int n = 1000; //you may check on different number of elements if you like
+            int[] array = new Random().ints(n).toArray();
 
             MergeSort task = new MergeSort(array);
 
@@ -93,18 +89,17 @@ public class MergeSort extends Task<int[]> {
             task.getResult().whenResolved(() -> {
                 //warning - a large print!! - you can remove this line if you wish
                 //System.out.println(Arrays.toString(task.getResult().get()));
-                /******* debug ***********/
-                boolean ans = true;
-                int length = task.getResult().get().length;
-                for (int i = 1; i < length; i++) {
-                    if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
-                        ans = false;
-                        break;
-                    }
-                }
-                System.out.println();
-                System.out.println(ans);
-                /*************************/
+//                /******* debug ***********/
+//                boolean ans = true;
+//                int length = task.getResult().get().length;
+//                for (int i = 1; i < length; i++) {
+//                    if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
+//                        ans = false;
+//                        break;
+//                    }
+//                }
+//                System.out.println(ans);
+//                /*************************/
                 l.countDown();
             });
 

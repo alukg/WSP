@@ -94,19 +94,15 @@ public abstract class Task<R> {
                 fatherTask = task;
             }
 
-            synchronized public void run() {
-                int oldV;
-                do {
-                    oldV = fatherTask.childsLocks.get();
-                } while (!fatherTask.childsLocks.compareAndSet(oldV, fatherTask.childsLocks.get() - 1));
-//                if (currProc.getPool().taskfinished.get() > 6)
-//                    System.out.println(fatherTask.childsLocks.get() + " " + returned + "\n" +
-//                            currProc.getPool().getProcessors()[0].getTasks().size() + "\n" +
-//                            currProc.getPool().getProcessors()[1].getTasks().size() + "\n" +
-//                            currProc.getPool().getProcessors()[2].getTasks().size() + "\n" +
-//                            currProc.getPool().getProcessors()[3].getTasks().size() + "\n");
-                if (fatherTask.childsLocks.get() == 0) {
-                    currProc.addTask(fatherTask);
+            public void run() {
+                synchronized (fatherTask) {
+                    int oldV;
+                    do {
+                        oldV = fatherTask.childsLocks.get();
+                    } while (!fatherTask.childsLocks.compareAndSet(oldV, fatherTask.childsLocks.get() - 1));
+                    if (fatherTask.childsLocks.get() == 0) {
+                        currProc.addTask(fatherTask);
+                    }
                 }
             }
         }

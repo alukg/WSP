@@ -43,7 +43,6 @@ public class Processor implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Run Thread");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 if (tasks.isEmpty()) {
@@ -67,17 +66,19 @@ public class Processor implements Runnable {
             while (counter % pool.getNumOfProccessors() != id) {
                 Processor currProc = pool.getProcessors()[counter % pool.getNumOfProccessors()];
                 synchronized (currProc) {
-                    if (currProc.tasks.size() > 1) {
-                        int numOfTasksToSteal = currProc.tasks.size() / 2;
-                        for (int i = 0; i < numOfTasksToSteal && currProc.tasks.size() > 1; i++) {
+                    if (currProc.tasks.size() >= 1) {
+                        int numOfTasksToSteal;
+                        if (currProc.tasks.size() == 1)
+                            numOfTasksToSteal = 1;
+                        else
+                            numOfTasksToSteal = currProc.tasks.size() / 2;
+                        for (int i = 1; i <= numOfTasksToSteal && currProc.tasks.size() >= 1; i++) {
                             Task t = currProc.tasks.pollLast();
                             if (t != null) {
                                 t.setProc(this);
                                 this.addTask(t);
                             }
                         }
-//                        System.out.println("Thread" + this.id + " stole " + tasks.size() + " tasks from Thread" + currProc.id + "\n" +
-//                                "Thread" + currProc.id + " have " + currProc.tasks.size() + " tasks left");
                         break;
                     } else {
                         counter++;
@@ -103,7 +104,7 @@ public class Processor implements Runnable {
         return pool;
     }
 
-    public LinkedBlockingDeque getTasks(){
+    public LinkedBlockingDeque getTasks() {
         return tasks;
     }
 }

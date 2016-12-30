@@ -38,12 +38,11 @@ public class Simulator {
         warehouse = new Warehouse();
 
         FactoryPlan data = null;
-        try {
-            String JSON_PATH = "Simulation.json";
-            Gson gson = new Gson();
-            Type ReviewType = new TypeToken<FactoryPlan>() {
-            }.getType();
-            JsonReader reader = new JsonReader(new FileReader(JSON_PATH));
+        String JSON_PATH = "Simulation.json";
+        Gson gson = new Gson();
+        Type ReviewType = new TypeToken<FactoryPlan>() {
+        }.getType();
+        try (JsonReader reader = new JsonReader(new FileReader(JSON_PATH))) {
             data = gson.fromJson(reader, ReviewType);
         } catch (FileNotFoundException e) {
             System.out.println("file not found");
@@ -87,6 +86,9 @@ public class Simulator {
             System.out.println("Submit " + numOfProducts + " Products.");
             l.await();
         }
+
+        WSP.shutdown();
+
         ConcurrentLinkedQueue<Product> simulationResult = new ConcurrentLinkedQueue<>();
         for (Manufacture task : completedTasks) {
             simulationResult.add(task.getResult().get());
@@ -105,7 +107,24 @@ public class Simulator {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ConcurrentLinkedQueue<Product> result = start();
+        ConcurrentLinkedQueue<Product> SimulationResult = start();
+
+        File file = new File("result.ser");
+
+        try (FileOutputStream FOS = new FileOutputStream(file); ObjectOutputStream OOS = new ObjectOutputStream(FOS)) {
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            OOS.writeObject(SimulationResult);
+            OOS.flush();
+
+            System.out.println("Done");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getDataFromFactoryPlan(FactoryPlan data) {

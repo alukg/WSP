@@ -71,7 +71,6 @@ public class WorkStealingThreadPool {
         while (!task.getResult().isResolved()) {
             Thread.currentThread().sleep(1000);
         }
-        System.out.println("taskcreated: " + taskcreated + " taskfinsihed: " + taskfinished);
         for (Thread thread : threads){
             thread.interrupt();
         }
