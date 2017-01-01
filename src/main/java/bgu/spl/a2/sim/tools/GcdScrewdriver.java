@@ -39,7 +39,13 @@ public class GcdScrewdriver implements Tool {
         }
         return returnValue;
     }
-    public long reverse(long n){
+
+    /**
+     * Return a number from the end to start.
+     * @param n - number to reverse.
+     * @return - the reversed number.
+     */
+    private long reverse(long n){
         long reverse=0;
         while( n != 0 ){
             reverse = reverse * 10;
