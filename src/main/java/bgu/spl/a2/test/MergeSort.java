@@ -90,15 +90,15 @@ public class MergeSort extends Task<int[]> {
                 //warning - a large print!! - you can remove this line if you wish
                 //System.out.println(Arrays.toString(task.getResult().get()));
 //                /******* debug ***********/
-//                boolean ans = true;
-//                int length = task.getResult().get().length;
-//                for (int i = 1; i < length; i++) {
-//                    if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
-//                        ans = false;
-//                        break;
-//                    }
-//                }
-//                System.out.println(ans);
+                boolean ans = true;
+                int length = task.getResult().get().length;
+                for (int i = 1; i < length; i++) {
+                    if (task.getResult().get()[i] < task.getResult().get()[i - 1]) {
+                        ans = false;
+                        break;
+                    }
+                }
+                System.out.println(ans);
 //                /*************************/
                 l.countDown();
             });
