@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 public class Simulator {
     private static WorkStealingThreadPool WSP = null;
     private static Warehouse warehouse;
+    private static String filePath;
 
     /**
      * Begin the simulation
@@ -38,7 +39,7 @@ public class Simulator {
         warehouse = new Warehouse();
 
         FactoryPlan data = null;
-        String JSON_PATH = "Simulation.json";
+        String JSON_PATH = filePath;
         Gson gson = new Gson();
         Type ReviewType = new TypeToken<FactoryPlan>() {
         }.getType();
@@ -113,6 +114,11 @@ public class Simulator {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        if (args[0] == null)
+            throw new IllegalArgumentException("No file name inserted");
+        else
+            filePath = args[0];
+
         ConcurrentLinkedQueue<Product> SimulationResult = start();
 
         File file = new File("result.ser");

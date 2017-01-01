@@ -1,22 +1,15 @@
 package bgu.spl.a2.sim;
 
-import bgu.spl.a2.sim.json.FactoryPlan;
 import bgu.spl.a2.sim.tools.GCD_Screwdriver;
 import bgu.spl.a2.sim.tools.NextPrimeHammer;
 import bgu.spl.a2.sim.tools.RandomSumPliers;
 import bgu.spl.a2.sim.tools.Tool;
 import bgu.spl.a2.sim.conf.ManufactoringPlan;
 import bgu.spl.a2.Deferred;
-import bgu.spl.a2.Task;
-import bgu.spl.a2.test.MergeSort;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * A class representing the warehouse in your simulation

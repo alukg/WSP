@@ -25,12 +25,12 @@ public class ToolTask extends Task<Long> {
     }
 
     @Override
-
     protected void start() {
         Deferred<Tool> t = warehouse.acquireTool(toolName);
         t.whenResolved(() -> {
             complete(t.get().useOn(product));
-            warehouse.releaseTool(t.get());
+            ReleaseTask releaseTask = new ReleaseTask(warehouse,t.get());
+            spawn(releaseTask);
         });
     }
 }
