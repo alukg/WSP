@@ -3,9 +3,6 @@ package bgu.spl.a2.sim.tasks;
 import bgu.spl.a2.Deferred;
 import bgu.spl.a2.sim.Product;
 import bgu.spl.a2.sim.Warehouse;
-import bgu.spl.a2.sim.tools.GCD_Screwdriver;
-import bgu.spl.a2.sim.tools.NextPrimeHammer;
-import bgu.spl.a2.sim.tools.RandomSumPliers;
 import bgu.spl.a2.sim.tools.Tool;
 import bgu.spl.a2.Task;
 

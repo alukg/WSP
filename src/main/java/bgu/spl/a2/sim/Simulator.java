@@ -9,7 +9,7 @@ import bgu.spl.a2.WorkStealingThreadPool;
 import bgu.spl.a2.sim.conf.ManufactoringPlan;
 import bgu.spl.a2.sim.json.*;
 import bgu.spl.a2.sim.tasks.Manufacture;
-import bgu.spl.a2.sim.tools.GCD_Screwdriver;
+import bgu.spl.a2.sim.tools.GcdScrewdriver;
 import bgu.spl.a2.sim.tools.NextPrimeHammer;
 import bgu.spl.a2.sim.tools.RandomSumPliers;
 import bgu.spl.a2.sim.tools.Tool;
@@ -124,8 +124,6 @@ public class Simulator {
             OOS.writeObject(SimulationResult);
             OOS.flush();
 
-            System.out.println("Done");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,7 +146,7 @@ public class Simulator {
             Tool tool = null;
             switch (toolJson.getTool()) {
                 case "gs-driver":
-                    tool = new GCD_Screwdriver();
+                    tool = new GcdScrewdriver();
                     break;
                 case "np-hammer":
                     tool = new NextPrimeHammer();

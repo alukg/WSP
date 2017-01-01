@@ -1,6 +1,6 @@
 package bgu.spl.a2.sim;
 
-import bgu.spl.a2.sim.tools.GCD_Screwdriver;
+import bgu.spl.a2.sim.tools.GcdScrewdriver;
 import bgu.spl.a2.sim.tools.NextPrimeHammer;
 import bgu.spl.a2.sim.tools.RandomSumPliers;
 import bgu.spl.a2.sim.tools.Tool;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Warehouse {
     HashMap<String, ManufactoringPlan> mpList;
-    ConcurrentLinkedQueue<GCD_Screwdriver> gcd;
+    ConcurrentLinkedQueue<GcdScrewdriver> gcd;
     ConcurrentLinkedQueue<RandomSumPliers> rdm;
     ConcurrentLinkedQueue<NextPrimeHammer> prm;
     ConcurrentLinkedQueue<Deferred<Tool>> gcdDefferds;
@@ -129,7 +129,7 @@ public class Warehouse {
     public void releaseTool(Tool tool) {
         switch (tool.getType()) {
             case "gs-driver":
-                releaseTool((GCD_Screwdriver)tool);
+                releaseTool((GcdScrewdriver)tool);
                 break;
             case "np-hammer":
                 releaseTool((NextPrimeHammer) tool);
@@ -146,7 +146,7 @@ public class Warehouse {
      * Return GCDSCrewdriver to the warehouse or to waiting Deferred.
      * @param tool - for return.
      */
-    private void releaseTool(GCD_Screwdriver tool){
+    private void releaseTool(GcdScrewdriver tool){
         synchronized (lockGCD) {
             Deferred<Tool> toolDeferred = gcdDefferds.poll();
             if (toolDeferred == null) {
@@ -217,7 +217,7 @@ public class Warehouse {
         switch (tool.getType()) {
             case "gs-driver":
                 for (int i = 0; i < qty; i++) {
-                    gcd.add(new GCD_Screwdriver());
+                    gcd.add(new GcdScrewdriver());
                 }
                 break;
             case "np-hammer":

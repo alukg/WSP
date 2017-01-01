@@ -5,7 +5,7 @@ import bgu.spl.a2.sim.Product;
 /**
  * Class for Screwdriver tool.
  */
-public class GCD_Screwdriver implements Tool {
+public class GcdScrewdriver implements Tool {
 
     /**
      * Get the tool type.
