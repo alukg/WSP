@@ -35,11 +35,7 @@ public class Manufacture extends Task<Product> {
                 });
                 ArrayList<ToolTask> tooltasks = new ArrayList<>();
                 if(tools.length==0){
-                    Long finalIdnoTools = new Long(product.getStartId());
-                    for(Product partnoTools : product.getParts()){
-                        finalIdnoTools += partnoTools.getFinalId();
-                    }
-                    product.setFinalID(finalIdnoTools);
+                    product.setFinalID(product.getStartId());
                     complete(product);
                 }
                 else {
