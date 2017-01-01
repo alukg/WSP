@@ -62,15 +62,11 @@ public abstract class Task<R> {
      */
     protected final void spawn(Task<?>... task) {
         int oldV;
-//        int num;
         for (Task t : task) {
             do {
                 oldV = childsLocks.get();
             } while (!childsLocks.compareAndSet(oldV, childsLocks.get() + 1));
             currProc.addTask(t);
-//          do {
-//                num = currProc.getPool().taskcreated.get();
-//            } while (!currProc.getPool().taskcreated.compareAndSet(num, currProc.getPool().taskcreated.get() + 1));
         }
     }
 

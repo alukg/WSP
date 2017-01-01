@@ -7,16 +7,23 @@ import bgu.spl.a2.sim.Warehouse;
 import java.util.ArrayList;
 
 /**
- * Created by shahar on 28/12/2016.
+ * Task for manufacturing product.
  */
 public class Manufacture extends Task<Product> {
     Product product;
     Warehouse warehouse;
     ArrayList<Manufacture>tasks = new ArrayList<>();
+
+    /**
+     * Constructor.
+     * @param product - to manufacture.
+     * @param warehouse - For getting tools and plans.
+     */
     public Manufacture(Product product, Warehouse warehouse) {
         this.product = product;
         this.warehouse = warehouse;
     }
+
     @Override
     protected void start() {
         String[] parts = warehouse.getPlan(product.getName()).getParts();

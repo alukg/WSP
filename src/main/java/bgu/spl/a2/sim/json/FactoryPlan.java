@@ -6,6 +6,9 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * All the Classes for getting the data from Json file.
+ */
 public class FactoryPlan implements Serializable
 {
 

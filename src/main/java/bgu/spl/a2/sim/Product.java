@@ -61,6 +61,10 @@ public class Product implements Serializable{
     	parts.add(p);
 	}
 
+	/**
+	 * Set finalID.
+	 * @param num - Serial number.
+	 */
 	public void setFinalID(long num){
     	this.finalID=num;
 	}

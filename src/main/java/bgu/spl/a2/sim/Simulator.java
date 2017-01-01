@@ -29,6 +29,7 @@ import java.util.concurrent.CountDownLatch;
 public class Simulator {
     private static WorkStealingThreadPool WSP = null;
     private static Warehouse warehouse;
+    private static String filePath;
 
     /**
      * Begin the simulation
@@ -38,7 +39,7 @@ public class Simulator {
         warehouse = new Warehouse();
 
         FactoryPlan data = null;
-        String JSON_PATH = "Simulation.json";
+        String JSON_PATH = filePath;
         Gson gson = new Gson();
         Type ReviewType = new TypeToken<FactoryPlan>() {
         }.getType();
@@ -82,8 +83,6 @@ public class Simulator {
                     });
                 }
             }
-            System.out.println("Submit " + numOfProducts + " Products.");
-            System.out.println();
             l.await();
         }
 
@@ -92,12 +91,6 @@ public class Simulator {
         ConcurrentLinkedQueue<Product> simulationResult = new ConcurrentLinkedQueue<>();
         for (Manufacture task : completedTasks) {
             simulationResult.add(task.getResult().get());
-            /******* debug ***********/
-            System.out.println("ProductName: " + task.getResult().get().getName());
-            System.out.println("Start ID: " + task.getResult().get().getStartId());
-            System.out.println("FinalID: " + task.getResult().get().getFinalId());
-            System.out.println();
-            /*************************/
         }
 
         return simulationResult;
@@ -113,6 +106,11 @@ public class Simulator {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        if (args[0] == null)
+            throw new IllegalArgumentException("No file name inserted");
+        else
+            filePath = args[0];
+
         ConcurrentLinkedQueue<Product> SimulationResult = start();
 
         File file = new File("result.ser");
@@ -133,6 +131,10 @@ public class Simulator {
         }
     }
 
+    /**
+     * Create Tools and Plans object from the json data object.
+     * @param data - Object populated from json file.
+     */
     private static void getDataFromFactoryPlan(FactoryPlan data) {
         List<Plan> planListFromJson = data.getPlans();
         List<ToolJson> toolsListFromJson = data.getToolJsons();

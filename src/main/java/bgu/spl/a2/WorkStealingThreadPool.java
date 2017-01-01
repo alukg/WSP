@@ -43,7 +43,7 @@ public class WorkStealingThreadPool {
             deques[id] = new LinkedBlockingDeque<>();
             processors[id] = new Processor(id, this);
         }
-        vm = new VersionMonitor(this);
+        vm = new VersionMonitor();
     }
 
     /**

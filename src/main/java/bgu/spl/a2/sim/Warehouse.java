@@ -1,22 +1,15 @@
 package bgu.spl.a2.sim;
 
-import bgu.spl.a2.sim.json.FactoryPlan;
 import bgu.spl.a2.sim.tools.GCD_Screwdriver;
 import bgu.spl.a2.sim.tools.NextPrimeHammer;
 import bgu.spl.a2.sim.tools.RandomSumPliers;
 import bgu.spl.a2.sim.tools.Tool;
 import bgu.spl.a2.sim.conf.ManufactoringPlan;
 import bgu.spl.a2.Deferred;
-import bgu.spl.a2.Task;
-import bgu.spl.a2.test.MergeSort;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * A class representing the warehouse in your simulation
@@ -74,6 +67,10 @@ public class Warehouse {
         }
     }
 
+    /**
+     * Ask for RansomSumPliers Tool from the warehouse.
+     * @return - Deferred Object with RansomSumPliers Tool.
+     */
     private Deferred<Tool> acquireToolRDM() {
         Tool tool = rdm.poll();
         if(tool == null){
@@ -88,6 +85,10 @@ public class Warehouse {
         }
     }
 
+    /**
+     * Ask for NextPrimeHammer Tool from the warehouse.
+     * @return - Deferred Object with NextPrimeHammer Tool.
+     */
     private Deferred<Tool> acquireToolPRM() {
         Tool tool = prm.poll();
         if(tool == null){
@@ -102,6 +103,10 @@ public class Warehouse {
         }
     }
 
+    /**
+     * Ask for GCDScrewdriver Tool from the warehouse.
+     * @return - Deferred Object with GCDScrewdriver Tool.
+     */
     private Deferred<Tool> acquireToolGCD() {
         Tool tool = gcd.poll();
         if(tool == null){
@@ -136,6 +141,11 @@ public class Warehouse {
                 throw new NoSuchElementException("no such tool");
         }
     }
+
+    /**
+     * Return GCDSCrewdriver to the warehouse or to waiting Deferred.
+     * @param tool - for return.
+     */
     private void releaseTool(GCD_Screwdriver tool){
         synchronized (lockGCD) {
             Deferred<Tool> toolDeferred = gcdDefferds.poll();
@@ -146,6 +156,11 @@ public class Warehouse {
             }
         }
     }
+
+    /**
+     * Return NextPrimeHammer to the warehouse or to waiting Deferred.
+     * @param tool - for return.
+     */
     private void releaseTool(NextPrimeHammer tool){
         synchronized (lockPRM) {
             Deferred<Tool> toolDeferred = prmDefferds.poll();
@@ -156,6 +171,11 @@ public class Warehouse {
             }
         }
     }
+
+    /**
+     * Return RandomSumPliers to the warehouse or to waiting Deferred.
+     * @param tool - for return.
+     */
     private void releaseTool(RandomSumPliers tool){
         synchronized (lockRDM) {
             Deferred<Tool> toolDeferred = rdmDefferds.poll();
