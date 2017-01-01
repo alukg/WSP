@@ -27,7 +27,7 @@ import java.util.concurrent.CountDownLatch;
  * A class describing the simulator for part 2 of the assignment
  */
 public class Simulator {
-    private static WorkStealingThreadPool WSP;
+    private static WorkStealingThreadPool WSP = null;
     private static Warehouse warehouse;
 
     /**
@@ -45,7 +45,7 @@ public class Simulator {
         try (JsonReader reader = new JsonReader(new FileReader(JSON_PATH))) {
             data = gson.fromJson(reader, ReviewType);
         } catch (FileNotFoundException e) {
-            System.out.println("file not found");
+            System.out.println("File not found");
             System.exit(1);
         } catch (Exception e) {
             System.out.println("Can't format json object");
@@ -54,7 +54,9 @@ public class Simulator {
 
         int numOfThreads = data.getThreads();
         getDataFromFactoryPlan(data);
-        attachWorkStealingThreadPool(new WorkStealingThreadPool(numOfThreads));
+
+        if (WSP == null)
+            attachWorkStealingThreadPool(new WorkStealingThreadPool(numOfThreads));
 
         ConcurrentLinkedQueue<Manufacture> completedTasks = new ConcurrentLinkedQueue<>();
         List<List<Series>> waves = data.getWaves();
@@ -73,17 +75,15 @@ public class Simulator {
                 String seriesName = series.getProduct();
                 for (int i = 0; i <= series.getQty() - 1; i++) {
                     Manufacture task = new Manufacture(new Product(startId + i, seriesName), warehouse);
-                    WSP.submit(task);
                     completedTasks.add(task);
+                    WSP.submit(task);
                     task.getResult().whenResolved(() -> {
-                        /******* debug ***********/
-                        System.out.println("Start ID: " + task.getResult().get().getStartId() + " , FinalID: " + task.getResult().get().getFinalId());
-                        /*************************/
                         l.countDown();
                     });
                 }
             }
             System.out.println("Submit " + numOfProducts + " Products.");
+            System.out.println();
             l.await();
         }
 
@@ -92,6 +92,12 @@ public class Simulator {
         ConcurrentLinkedQueue<Product> simulationResult = new ConcurrentLinkedQueue<>();
         for (Manufacture task : completedTasks) {
             simulationResult.add(task.getResult().get());
+            /******* debug ***********/
+            System.out.println("ProductName: " + task.getResult().get().getName());
+            System.out.println("Start ID: " + task.getResult().get().getStartId());
+            System.out.println("FinalID: " + task.getResult().get().getFinalId());
+            System.out.println();
+            /*************************/
         }
 
         return simulationResult;

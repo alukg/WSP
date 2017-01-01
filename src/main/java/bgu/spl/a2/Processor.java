@@ -38,7 +38,7 @@ public class Processor implements Runnable {
     /*package*/ Processor(int id, WorkStealingThreadPool pool) {
         this.id = id;
         this.pool = pool;
-        this.tasks = new LinkedBlockingDeque<>();
+        this.tasks = pool.getDeques()[id];
     }
 
     @Override

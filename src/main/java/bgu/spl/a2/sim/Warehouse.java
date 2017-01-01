@@ -37,7 +37,6 @@ public class Warehouse {
     Integer lockGCD;
     Integer lockRDM;
     Integer lockPRM;
-    
 
     /**
      * Constructor
@@ -133,6 +132,8 @@ public class Warehouse {
             case "rs-pliers":
                 releaseTool((RandomSumPliers) tool);
                 break;
+            default:
+                throw new NoSuchElementException("no such tool");
         }
     }
     private void releaseTool(GCD_Screwdriver tool){
@@ -209,6 +210,8 @@ public class Warehouse {
                     rdm.add(new RandomSumPliers());
                 }
                 break;
+            default:
+                throw new NoSuchElementException("no such tool");
         }
     }
 

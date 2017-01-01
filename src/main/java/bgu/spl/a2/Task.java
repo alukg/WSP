@@ -120,10 +120,6 @@ public abstract class Task<R> {
      * @param result - the task calculated result
      */
     protected final void complete(R result) {
-        int num2;
-        do {
-            num2 = currProc.getPool().taskfinished.get();
-        } while (!currProc.getPool().taskfinished.compareAndSet(num2, currProc.getPool().taskfinished.get() + 1));
         deferred.resolve(result);
     }
 

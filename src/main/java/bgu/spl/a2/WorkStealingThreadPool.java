@@ -1,6 +1,7 @@
 package bgu.spl.a2;
 
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,11 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WorkStealingThreadPool {
     private Thread[] threads;
     private Processor[] processors;
+    private LinkedBlockingDeque<Task>[] deques;
     private Task task;
     private int numOfThreads;
     private VersionMonitor vm;
-    public AtomicInteger taskcreated = new AtomicInteger(1);
-    public AtomicInteger taskfinished = new AtomicInteger(0);
+
     /**
      * creates a {@link WorkStealingThreadPool} which has nthreads
      * {@link Processor}s. Note, threads should not get started until calling to
@@ -37,7 +38,9 @@ public class WorkStealingThreadPool {
         numOfThreads = nthreads;
         threads = new Thread[nthreads];
         processors = new Processor[nthreads];
+        deques = new LinkedBlockingDeque[nthreads];
         for (int id = 0; id < nthreads; id++) {
+            deques[id] = new LinkedBlockingDeque<>();
             processors[id] = new Processor(id, this);
         }
         vm = new VersionMonitor(this);
@@ -69,9 +72,9 @@ public class WorkStealingThreadPool {
      */
     public void shutdown() throws InterruptedException {
         while (!task.getResult().isResolved()) {
-            Thread.currentThread().sleep(1000);
+            Thread.currentThread().sleep(500);
         }
-        for (Thread thread : threads){
+        for (Thread thread : threads) {
             thread.interrupt();
         }
     }
@@ -86,15 +89,19 @@ public class WorkStealingThreadPool {
         }
     }
 
-    public int getNumOfProccessors(){
+    int getNumOfProccessors() {
         return processors.length;
     }
 
-    public Processor[] getProcessors(){
-        return  processors;
+    Processor[] getProcessors() {
+        return processors;
     }
 
-    public VersionMonitor getVersionMonitor(){
+    VersionMonitor getVersionMonitor() {
         return vm;
+    }
+
+    LinkedBlockingDeque<Task>[] getDeques() {
+        return deques;
     }
 }

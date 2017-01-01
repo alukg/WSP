@@ -23,9 +23,7 @@ public class FactoryPlan implements Serializable
     private List<List<Series>> waves = null;
     private final static long serialVersionUID = 962929236297046047L;
 
-    public int getThreads() {
-        return threads;
-    }
+    public int getThreads() { return threads; }
 
     public void setThreads(int threads) {
         this.threads = threads;

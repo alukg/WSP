@@ -21,7 +21,6 @@ public class RandomSumPliers implements Tool {
             long stop = productId % 10000;
 
             Random rand = new Random(productId);
-            System.out.println(rand.nextInt() + " " + productId);
             for (int i=1;i<=stop;i++) {
                 sum += rand.nextInt();
             }
