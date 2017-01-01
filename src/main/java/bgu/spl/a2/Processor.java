@@ -58,6 +58,10 @@ public class Processor implements Runnable {
         }
     }
 
+    /**
+     * Try to steal task from one of the other processors.
+     * @throws InterruptedException - When waiting in shutdown.
+     */
     private void stealTask() throws InterruptedException {
         int currVersion;
         int counter = id + 1;
@@ -102,9 +106,5 @@ public class Processor implements Runnable {
 
     WorkStealingThreadPool getPool() {
         return pool;
-    }
-
-    public LinkedBlockingDeque getTasks() {
-        return tasks;
     }
 }

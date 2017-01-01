@@ -4,11 +4,21 @@ import bgu.spl.a2.sim.Product;
 import bgu.spl.a2.sim.Warehouse;
 
 public class NextPrimeHammer implements Tool {
+
+    /**
+     * Get the tool type.
+     * @return tool type.
+     */
     @Override
     public String getType() {
         return "np-hammer";
     }
 
+    /**
+     * Summarize of tool use on product parts.
+     * @param p - Product to use tool on
+     * @return - Sum of product parts after tool use on.
+     */
     @Override
     public long useOn(Product p) {
         long returnValue = 0;

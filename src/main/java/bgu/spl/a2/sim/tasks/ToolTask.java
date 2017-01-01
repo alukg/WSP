@@ -10,14 +10,19 @@ import bgu.spl.a2.sim.tools.Tool;
 import bgu.spl.a2.Task;
 
 /**
- * Created by shahar on 28/12/2016.
+ * Task to useOn all the tools on parts.
  */
 public class ToolTask extends Task<Long> {
     Warehouse warehouse;
     String toolName;
     Product product;
-    Long useOn = new Long(0);
 
+    /**
+     * Constructor.
+     * @param toolName - Which tool to use with.
+     * @param product - The product to use on his parts.
+     * @param warehouse - For getting the tool.
+     */
     public ToolTask(String toolName, Product product, Warehouse warehouse) {
         this.warehouse = warehouse;
         this.product = product;

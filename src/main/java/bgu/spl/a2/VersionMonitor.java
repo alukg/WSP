@@ -18,28 +18,37 @@ package bgu.spl.a2;
  */
 public class VersionMonitor {
     private int version;
-    WorkStealingThreadPool pool;
 
-    public VersionMonitor(WorkStealingThreadPool pool) {
-        this.pool=pool;
+    /**
+     * Constructor.
+     */
+    public VersionMonitor() {
         version = 0;
     }
 
+    /**
+     * version getter.
+     * @return - The current version.
+     */
     public int getVersion() {
         return version;
     }
 
+    /**
+     * Increase the version in 1.
+     */
     synchronized public void inc() {
         version++;
-//        System.out.println(Thread.currentThread().getName() + " wake allThreads");
         notifyAll();
     }
 
+    /**
+     * Wait until the version increase.
+     * @param version - For checking after waking up.
+     * @throws InterruptedException - When waiting in shutdown.
+     */
     synchronized public void await(int version) throws InterruptedException {
         while (getVersion() == version) {
-//            System.out.println(Thread.currentThread().getName() + " Waiting." +
-//                    " on version " + version);
-//            System.out.println("taskCreated " + pool.taskcreated + " taskfinished " + pool.taskfinished);
             wait();
         }
     }
